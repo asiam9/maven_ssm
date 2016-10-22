@@ -58,7 +58,7 @@
     <!-- 拦截设置 -->
     <servlet-mapping>
         <servlet-name>dispatcherServlet</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>*/api/*</url-pattern>
     </servlet-mapping>
 
     <!-- 错误跳转页面 -->
