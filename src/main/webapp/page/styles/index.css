@@ -1,0 +1,17 @@
+html,body{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 0.26rem;
+    background-color: #fccd01;
+}
+.button{
+    width: 2rem;
+    height:0.5rem;
+    background-color: red;
+    line-height: 0.5rem;
+    text-align: center;
+    font-size: 0.3rem;
+}
+

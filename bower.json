@@ -1,0 +1,22 @@
+{
+  "name": "my-react-redux",
+  "description": "",
+  "main": "",
+  "authors": [
+    "houdong"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "redux"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "admin-lte": "2.3.2"
+  }
+}
