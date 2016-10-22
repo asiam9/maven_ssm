@@ -6,6 +6,7 @@ var React = require('react');
 import * as ItemsActions from 'Actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {UserRoute} from "UserRoute";
 import {replace, goBack, push} from 'redux-router';
 
 var HomePage = React.createClass({
@@ -16,12 +17,12 @@ var HomePage = React.createClass({
             <div className="skin-blue sidebar-mini">
                 <div className="wrapper">
                     <header className="main-header">
-                        <a href="../../index2.html" className="logo">
+                        <a href="javascript:void(0);" className="logo">
                             <span className="logo-mini"><b>A</b>LT</span>
-                            <span className="logo-lg"><b>Admin</b>LTE</span>
+                            <span className="logo-lg"><b>H5</b>管理后台</span>
                         </a>
                         <nav className="navbar navbar-static-top" role="navigation">
-                            <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                            <a href="#" className="sidebar-toggle"  role="button">
                                 <span className="sr-only">Toggle navigation</span>
                                 <span className="icon-bar"></span>
                                 <span className="icon-bar"></span>
