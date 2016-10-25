@@ -40,5 +40,4 @@
      <mvc:resources location="/page/"  mapping="/page/**" />
      <mvc:resources location="/public/"  mapping="/public/**" />
 
-
 </beans>

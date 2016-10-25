@@ -4,5 +4,6 @@
 
 exports.UserRoute = {
     Login: '/login',
-    HomePage:'/home-page'
+    HomePage:'/home-page',
+    Test:'/test'
 };

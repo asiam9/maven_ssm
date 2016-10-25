@@ -25,7 +25,7 @@ var HomePage = React.createClass({
                                     <li className="dropdown user user-menu">
                                         <a href="#" className="dropdown-toggle">
                                             <img src="public/build/images/user2-160x160.jpg" className="user-image" alt="User Image" />
-                                                <span className="hidden-xs">{this.props.Login.userName}</span>
+                                                <span className="hidden-xs"></span>
                                         </a>
                                     </li>
                                 </ul>
