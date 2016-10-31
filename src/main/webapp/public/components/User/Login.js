@@ -46,6 +46,7 @@ var Login = React.createClass({
                 self.props.User.password = data.userPassword;
                 self.props.User.id = data.id;
                 self.props.User.name = data.name;
+                //self.props.User = data;
                 let param = {
                     User: self.props.User
                 };
