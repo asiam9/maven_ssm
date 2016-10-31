@@ -22,29 +22,29 @@ var Login = React.createClass({
     getInitialState: function () {
         return {
             loginName: '',
-            userPassword: ''
+            password: ''
         }
     },
     handleClickLogin: function () {
         let loginName = this.state.loginName;
-        let userPassword = this.state.userPassword;
+        let password = this.state.password;
         let self = this;
         if (loginName == '') {
             alert("请填写登录名");
             return false;
-        } else if (userPassword == '') {
+        } else if (password == '') {
             alert("请填写密码");
             return false;
         } else {
             let params = {
                 loginName: loginName,
-                userPassword: userPassword
+                password: password
             };
             self.loginAPI(params, function (data) {
                 self.props.Login.loginName = data.loginName;
-                self.props.Login.userPassword = data.userPassword;
-                self.props.Login.userId = data.userId;
-                self.props.Login.userName = data.userName;
+                self.props.Login.password = data.userPassword;
+                self.props.Login.id = data.id;
+                self.props.Login.name = data.name;
                 let param = {
                     Login: self.props.Login
                 };
@@ -68,7 +68,7 @@ var Login = React.createClass({
     },
     handleChangePassword: function (event) {
         this.setState({
-            userPassword: event.target.value
+            password: event.target.value
         });
     },
     render: function () {

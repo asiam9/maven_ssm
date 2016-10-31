@@ -2,34 +2,64 @@ package com.hd.domain;
 
 public class User {
 	
-	private String userId;
-    private String userName;  
-    private String userPassword;  
+	private String id;
+    private String name;
+    private String password;
     private String loginName;
+    private String gender;
+    private String age;
+    private String position;
 
-  
-    public String getUserId() {
-        return userId;  
-    }  
-  
-    public void setUserId(String userId) {
-        this.userId = userId;  
-    }  
-  
-    public String getUserName() {  
-        return userName;  
-    }  
-  
-    public void setUserName(String userName) {  
-        this.userName = userName;  
-    }  
-  
-    public String getUserPassword() {  
-        return userPassword;  
-    }  
-  
-    public void setUserPassword(String userPassword) {  
-        this.userPassword = userPassword;  
+    public User() {
+    }
+
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getLoginName() {
@@ -39,7 +69,4 @@ public class User {
     public void setLoginName(String loginName) {
         this.loginName = loginName;
     }
-
-
-
 }

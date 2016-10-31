@@ -39,7 +39,7 @@ public class UserController {
     public void login(@RequestBody User user, HttpServletResponse response)throws IOException{
         User user2 = new User();
         user2.setLoginName(user.getLoginName());
-        user2.setUserPassword(user.getUserPassword());
+        user2.setPassword(user.getPassword());
         JSONObject jsonObject = new JSONObject();
         if(userService.login(user2)!=null){
             jsonObject.put("result", true);

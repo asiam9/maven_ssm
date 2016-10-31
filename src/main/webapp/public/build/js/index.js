@@ -7852,31 +7852,35 @@ webpackJsonp([0,1],[
 
 	var _history = __webpack_require__(363);
 
+	var _reduxLocalstorage = __webpack_require__(367);
+
+	var _reduxLocalstorage2 = _interopRequireDefault(_reduxLocalstorage);
+
 	function _interopRequireDefault(obj) {
 	    return obj && obj.__esModule ? obj : { default: obj };
 	}
 
-	var Login = __webpack_require__(367),
-	    HomePage = __webpack_require__(376);
+	/**
+	 * Created by houdong on 16/8/25.
+	 */
+
+	var Login = __webpack_require__(372),
+	    HomePage = __webpack_require__(381);
 
 	/******************************************************************************
 	 router
 	 ******************************************************************************/
-
-	/**
-	 * Created by houdong on 16/8/25.
-	 */
 
 	var routes = _react2.default.createElement(_reactRouter.Router, { history: _reactRouter.browserHistory }, _react2.default.createElement(_reactRouter.Route, { path: "/", component: Login }), _react2.default.createElement(_reactRouter.Route, { path: _UserRoute.UserRoute.Login, component: Login }), _react2.default.createElement(_reactRouter.Route, { path: _UserRoute.UserRoute.HomePage, component: HomePage }), _react2.default.createElement(_reactRouter.Route, { path: "*", component: Login }));
 
 	/******************************************************************************
 	 bind redux
 	 ******************************************************************************/
-
+	var enhancer = (0, _reduxLocalstorage2.default)();
 	var store = (0, _redux.compose)((0, _reduxRouter.reduxReactRouter)({
 	    routes: routes,
 	    createHistory: _history.createHistory
-	}))(_redux.createStore)(_index2.default);
+	}))(_redux.createStore)(_index2.default, enhancer);
 
 	var app = _react2.default.createElement("div", null, _react2.default.createElement(_reactRedux.Provider, { store: store }, _react2.default.createElement(_reduxRouter.ReduxRouter, { routes: routes })));
 
@@ -35145,8 +35149,8 @@ webpackJsonp([0,1],[
 	 */
 
 	exports.UserRoute = {
-	  Login: '/login',
-	  HomePage: '/home-page'
+	  Login: '/login.page',
+	  HomePage: '/home-page.page'
 	};
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(322); if (makeExportsHot(module, __webpack_require__(156))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "Route.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
@@ -37916,11 +37920,248 @@ webpackJsonp([0,1],[
 /* 367 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports['default'] = persistState;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _createSlicerJs = __webpack_require__(368);
+
+	var _createSlicerJs2 = _interopRequireDefault(_createSlicerJs);
+
+	var _utilMergeStateJs = __webpack_require__(371);
+
+	var _utilMergeStateJs2 = _interopRequireDefault(_utilMergeStateJs);
+
+	/**
+	 * @description
+	 * persistState is a Store Enhancer that syncs (a subset of) store state to localStorage.
+	 *
+	 * @param {String|String[]} [paths] Specify keys to sync with localStorage, if left undefined the whole store is persisted
+	 * @param {Object} [config] Optional config object
+	 * @param {String} [config.key="redux"] String used as localStorage key
+	 * @param {Function} [config.slicer] (paths) => (state) => subset. A function that returns a subset
+	 * of store state that should be persisted to localStorage
+	 * @param {Function} [config.serialize=JSON.stringify] (subset) => serializedData. Called just before persisting to
+	 * localStorage. Should transform the subset into a format that can be stored.
+	 * @param {Function} [config.deserialize=JSON.parse] (persistedData) => subset. Called directly after retrieving
+	 * persistedState from localStorage. Should transform the data into the format expected by your application
+	 *
+	 * @return {Function} An enhanced store
+	 */
+
+	function persistState(paths, config) {
+	  var cfg = _extends({
+	    key: 'redux',
+	    merge: _utilMergeStateJs2['default'],
+	    slicer: _createSlicerJs2['default'],
+	    serialize: JSON.stringify,
+	    deserialize: JSON.parse
+	  }, config);
+
+	  var key = cfg.key;
+	  var merge = cfg.merge;
+	  var slicer = cfg.slicer;
+	  var serialize = cfg.serialize;
+	  var deserialize = cfg.deserialize;
+
+	  return function (next) {
+	    return function (reducer, initialState, enhancer) {
+	      if (typeof initialState === 'function' && typeof enhancer === 'undefined') {
+	        enhancer = initialState;
+	        initialState = undefined;
+	      }
+
+	      var persistedState = undefined;
+	      var finalInitialState = undefined;
+
+	      try {
+	        persistedState = deserialize(localStorage.getItem(key));
+	        finalInitialState = merge(initialState, persistedState);
+	      } catch (e) {
+	        console.warn('Failed to retrieve initialize state from localStorage:', e);
+	      }
+
+	      var store = next(reducer, finalInitialState, enhancer);
+	      var slicerFn = slicer(paths);
+
+	      store.subscribe(function () {
+	        var state = store.getState();
+	        var subset = slicerFn(state);
+
+	        try {
+	          localStorage.setItem(key, serialize(subset));
+	        } catch (e) {
+	          console.warn('Unable to persist state to localStorage:', e);
+	        }
+	      });
+
+	      return store;
+	    };
+	  };
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 368 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = createSlicer;
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	var _getSubsetJs = __webpack_require__(369);
+
+	var _getSubsetJs2 = _interopRequireDefault(_getSubsetJs);
+
+	var _utilTypeOfJs = __webpack_require__(370);
+
+	var _utilTypeOfJs2 = _interopRequireDefault(_utilTypeOfJs);
+
+	/**
+	 * @description
+	 * createSlicer inspects the typeof paths and returns an appropriate slicer function.
+	 *
+	 * @param {String|String[]} [paths] The paths argument supplied to persistState.
+	 *
+	 * @return {Function} A slicer function, which returns the subset to store when called with Redux's store state.
+	 */
+
+	function createSlicer(paths) {
+	  switch ((0, _utilTypeOfJs2['default'])(paths)) {
+	    case 'void':
+	      return function (state) {
+	        return state;
+	      };
+	    case 'string':
+	      return function (state) {
+	        return (0, _getSubsetJs2['default'])(state, [paths]);
+	      };
+	    case 'array':
+	      return function (state) {
+	        return (0, _getSubsetJs2['default'])(state, paths);
+	      };
+	    default:
+	      return console.error('Invalid paths argument, should be of type String, Array or Void');
+	  }
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 369 */
+/***/ function(module, exports) {
+
+	/**
+	 * @description
+	 * getSubset returns an object with the same structure as the original object passed in,
+	 * but contains only the specified keys and only if that key has a truth-y value.
+	 *
+	 * @param {Object} obj The object from which to create a subset.
+	 * @param {String[]} paths An array of (top-level) keys that should be included in the subset.
+	 *
+	 * @return {Object} An object that contains the specified keys with truth-y values
+	 */
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports["default"] = getSubset;
+
+	function getSubset(obj, paths) {
+	  var subset = {};
+
+	  paths.forEach(function (key) {
+	    var slice = obj[key];
+	    if (slice) subset[key] = slice;
+	  });
+
+	  return subset;
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 370 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+	exports['default'] = typeOf;
+	var _isArray = Array.isArray || (Array.isArray = function (a) {
+	  return '' + a !== a && ({}).toString.call(a) === '[object Array]';
+	});
+
+	/**
+	 * @description
+	 * typeof method that
+	 * 1. groups all false-y & empty values as void
+	 * 2. distinguishes between object and array
+	 *
+	 * @param {*} thing The thing to inspect
+	 *
+	 * @return {String} Actionable type classification
+	 */
+
+	function typeOf(thing) {
+	  if (!thing) return 'void';
+
+	  if (_isArray(thing)) {
+	    if (!thing.length) return 'void';
+	    return 'array';
+	  }
+
+	  return typeof thing;
+	}
+
+	module.exports = exports['default'];
+
+/***/ },
+/* 371 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	exports["default"] = mergeState;
+
+	function mergeState(initialState, persistedState) {
+	  return persistedState ? _extends({}, initialState, persistedState) : initialState;
+	}
+
+	module.exports = exports["default"];
+
+/***/ },
+/* 372 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(78), RootInstanceProvider = __webpack_require__(86), ReactMount = __webpack_require__(88), React = __webpack_require__(156); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
 	"use strict";
 
-	var _Actions = __webpack_require__(368);
+	var _Actions = __webpack_require__(373);
 
 	var ItemsActions = _interopRequireWildcard(_Actions);
 
@@ -37930,7 +38171,7 @@ webpackJsonp([0,1],[
 
 	var _reactRedux = __webpack_require__(339);
 
-	var _Api = __webpack_require__(369);
+	var _Api = __webpack_require__(374);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
@@ -37956,7 +38197,7 @@ webpackJsonp([0,1],[
 
 	var React = __webpack_require__(156);
 
-	var initialParams = __webpack_require__(375).Login;
+	var initialParams = __webpack_require__(380).Login;
 
 	var Login = React.createClass({
 	    displayName: "Login",
@@ -37990,8 +38231,13 @@ webpackJsonp([0,1],[
 	                userPassword: userPassword
 	            };
 	            self.loginAPI(params, function (data) {
-	                self.props.Login.loginName = self.state.loginName;
-	                self.props.Login.userPassword = self.state.userPassword;
+	                self.props.Login.loginName = data.loginName;
+	                self.props.Login.userPassword = data.userPassword;
+	                self.props.Login.userId = data.userId;
+	                self.props.Login.userName = data.userName;
+	                var param = {
+	                    Login: self.props.Login
+	                };
 	                self.props.actions.changeComponentsState(param);
 	                self.props.history.push(_UserRoute.UserRoute.HomePage);
 	            }, function (error) {
@@ -37999,22 +38245,23 @@ webpackJsonp([0,1],[
 	            });
 	        }
 	    },
-
+	    handleKeyLogin: function handleKeyLogin(event) {
+	        if (event.keyCode == 13) {
+	            this.handleClickLogin();
+	        }
+	    },
 	    handleChangeName: function handleChangeName(event) {
 	        this.setState({
 	            loginName: event.target.value
 	        });
 	    },
-
 	    handleChangePassword: function handleChangePassword(event) {
 	        this.setState({
 	            userPassword: event.target.value
 	        });
 	    },
-
 	    render: function render() {
-
-	        return React.createElement("div", { className: "login-box" }, React.createElement("div", { className: "login-logo" }, React.createElement("b", null, "H5"), "\u7BA1\u7406\u540E\u53F0"), React.createElement("div", { className: "login-box-body" }, React.createElement("div", null, React.createElement("div", { className: "form-group has-feedback" }, React.createElement("input", { type: "text",
+	        return React.createElement("div", { className: "login-box", onKeyUp: this.handleKeyLogin }, React.createElement("div", { className: "login-logo" }, React.createElement("b", null, "H5"), "\u7BA1\u7406\u540E\u53F0"), React.createElement("div", { className: "login-box-body" }, React.createElement("div", null, React.createElement("div", { className: "form-group has-feedback" }, React.createElement("input", { type: "text",
 	            className: "form-control",
 	            placeholder: "\u8BF7\u8F93\u5165\u767B\u5F55\u540D",
 	            onChange: this.handleChangeName }), React.createElement("span", { className: "glyphicon glyphicon-user form-control-feedback" })), React.createElement("div", { className: "form-group has-feedback" }, React.createElement("input", { type: "password",
@@ -38040,7 +38287,7 @@ webpackJsonp([0,1],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 368 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(78), RootInstanceProvider = __webpack_require__(86), ReactMount = __webpack_require__(88), React = __webpack_require__(156); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -38065,14 +38312,14 @@ webpackJsonp([0,1],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 369 */
+/* 374 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(78), RootInstanceProvider = __webpack_require__(86), ReactMount = __webpack_require__(88), React = __webpack_require__(156); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
 	'use strict';
 
-	var _superagent = __webpack_require__(370);
+	var _superagent = __webpack_require__(375);
 
 	var _superagent2 = _interopRequireDefault(_superagent);
 
@@ -38113,7 +38360,7 @@ webpackJsonp([0,1],[
 	            });
 	            break;
 	        case 'post':
-	            _superagent2.default.post(url).send(params).end(function (err, res) {
+	            _superagent2.default.post(url + '.do').send(params).end(function (err, res) {
 	                if (!res) {
 	                    alert(err);
 	                    return;
@@ -38152,7 +38399,7 @@ webpackJsonp([0,1],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 370 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -38169,9 +38416,9 @@ webpackJsonp([0,1],[
 	  root = this;
 	}
 
-	var Emitter = __webpack_require__(371);
-	var requestBase = __webpack_require__(372);
-	var isObject = __webpack_require__(373);
+	var Emitter = __webpack_require__(376);
+	var requestBase = __webpack_require__(377);
+	var isObject = __webpack_require__(378);
 
 	/**
 	 * Noop.
@@ -38183,7 +38430,7 @@ webpackJsonp([0,1],[
 	 * Expose `request`.
 	 */
 
-	var request = module.exports = __webpack_require__(374).bind(null, Request);
+	var request = module.exports = __webpack_require__(379).bind(null, Request);
 
 	/**
 	 * Determine XHR.
@@ -39134,7 +39381,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 371 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -39303,13 +39550,13 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 372 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module of mixed-in functions shared between node and client code
 	 */
-	var isObject = __webpack_require__(373);
+	var isObject = __webpack_require__(378);
 
 	/**
 	 * Clear previous timeout.
@@ -39681,7 +39928,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 373 */
+/* 378 */
 /***/ function(module, exports) {
 
 	/**
@@ -39700,7 +39947,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 374 */
+/* 379 */
 /***/ function(module, exports) {
 
 	// The node and browser modules expose versions of this with the
@@ -39738,7 +39985,7 @@ webpackJsonp([0,1],[
 
 
 /***/ },
-/* 375 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(78), RootInstanceProvider = __webpack_require__(86), ReactMount = __webpack_require__(88), React = __webpack_require__(156); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
@@ -39751,13 +39998,15 @@ webpackJsonp([0,1],[
 
 	var initialProps = {
 
-	  /******************************************************************************
-	   * 用户相关
-	   ******************************************************************************/
-	  Login: {
-	    loginName: '',
-	    userPassword: ''
-	  }
+	    /******************************************************************************
+	     * 用户相关
+	     ******************************************************************************/
+	    Login: {
+	        loginName: '',
+	        userPassword: '',
+	        userId: '',
+	        userName: ''
+	    }
 
 	};
 	module.exports = initialProps;
@@ -39766,20 +40015,22 @@ webpackJsonp([0,1],[
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ },
-/* 376 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(78), RootInstanceProvider = __webpack_require__(86), ReactMount = __webpack_require__(88), React = __webpack_require__(156); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
 
 	'use strict';
 
-	var _Actions = __webpack_require__(368);
+	var _Actions = __webpack_require__(373);
 
 	var ItemsActions = _interopRequireWildcard(_Actions);
 
 	var _redux = __webpack_require__(325);
 
 	var _reactRedux = __webpack_require__(339);
+
+	var _UserRoute = __webpack_require__(321);
 
 	var _reduxRouter = __webpack_require__(346);
 
@@ -39805,8 +40056,7 @@ webpackJsonp([0,1],[
 	    displayName: 'HomePage',
 
 	    render: function render() {
-
-	        return React.createElement('div', null, React.createElement('p', null, this.props.Login.name, '\u767B\u5F55\u6210\u529F'));
+	        return React.createElement('div', { className: 'skin-blue sidebar-mini' }, React.createElement('div', { className: 'wrapper' }, React.createElement('header', { className: 'main-header' }, React.createElement('a', { href: 'javascript:void(0);', className: 'logo' }, React.createElement('span', { className: 'logo-lg' }, React.createElement('b', null, 'H5'), '\u7BA1\u7406\u540E\u53F0')), React.createElement('nav', { className: 'navbar navbar-static-top', role: 'navigation' }, React.createElement('div', { className: 'navbar-custom-menu' }, React.createElement('ul', { className: 'nav navbar-nav' }, React.createElement('li', { className: 'dropdown user user-menu' }, React.createElement('a', { href: '#', className: 'dropdown-toggle' }, React.createElement('div', { className: 'hd-user-image' }, this.props.Login.userName.substring(0, 1)), React.createElement('span', { className: 'hidden-xs' }, this.props.Login.userName)))))))));
 	    }
 	});
 

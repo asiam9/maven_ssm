@@ -9,9 +9,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;  
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;  
 
-//Ö¸¶¨bean×¢ÈëµÄÅäÖÃÎÄ¼þ  
+//Ö¸ï¿½ï¿½bean×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½  
 @ContextConfiguration(locations = { "classpath:application.xml" })  
-//Ê¹ÓÃ±ê×¼µÄJUnit @RunWith×¢ÊÍÀ´¸æËßJUnitÊ¹ÓÃSpring TestRunner  
+//Ê¹ï¿½Ã±ï¿½×¼ï¿½ï¿½JUnit @RunWith×¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½JUnitÊ¹ï¿½ï¿½Spring TestRunner  
 @RunWith(SpringJUnit4ClassRunner.class)  
 public class SpringTestCase extends AbstractJUnit4SpringContextTests {
     @Autowired
@@ -20,6 +20,6 @@ public class SpringTestCase extends AbstractJUnit4SpringContextTests {
     @Test
     public void selectUserByIdTest(){
         User user = userService.selectUserById("1");
-        System.out.println(user.getUserName() + ":" + user.getUserPassword());
+        System.out.println(user.getName() + ":" + user.getPassword());
     }
 }

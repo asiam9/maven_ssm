@@ -11,6 +11,7 @@ import {Provider} from "react-redux";
 import {reduxReactRouter, ReduxRouter} from "redux-router";
 import rootReducer from "./reducers/index";
 import {createHistory} from "history";
+import persistState from 'redux-localstorage';
 
 
 var Login = require('./components/User/Login'),
@@ -33,12 +34,12 @@ let routes = (
 /******************************************************************************
  bind redux
  ******************************************************************************/
-
+const enhancer = persistState();
 const store = compose(
     reduxReactRouter({
         routes,
         createHistory
-    }))(createStore)(rootReducer);
+    }))(createStore)(rootReducer,enhancer);
 
 
 let app = (<div>

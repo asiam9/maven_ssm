@@ -8,9 +8,9 @@ const initialProps = {
      ******************************************************************************/
     Login: {
         loginName: '',
-        userPassword:'',
-        userId:'',
-        userName:''
+        password:'',
+        id:'',
+        name:''
     }
 
 };

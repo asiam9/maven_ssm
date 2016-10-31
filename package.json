@@ -52,6 +52,7 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.7.0",
     "redux": "^3.5.2",
+    "redux-localstorage": "^0.4.1",
     "redux-router": "^2.1.2",
     "replace": "^0.3.0",
     "style-loader": "^0.13.1",
