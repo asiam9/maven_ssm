@@ -7,11 +7,46 @@ import * as ItemsActions from 'Actions';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {UserRoute} from "UserRoute";
+import Api from "Api";
 import {replace, goBack, push} from 'redux-router';
+var initialParams = require('InitialProps').UserList;
 
 var HomePage = React.createClass({
 
+    mixins: [Api],
+
+    getDefaultProps: function () {
+        return {
+            UserList: initialParams
+        }
+    },
+    getInitialState: function () {
+        return {
+            UserList: initialParams
+        }
+    },
+
+    componentWillMount: function () {
+        let self = this;
+        this.selectUserListAPI({}, function (data) {
+            for(let i=0;i<data.length;i++){
+                self.props.UserList.push(data[i]);
+            }
+        }, function (error) {
+            alert(error);
+        });
+    },
     render: function () {
+        let list = this.props.UserList.map((e, i) => {
+            return (
+                <tr role="row" className="odd" key={i}>
+                    <td className="sorting_1">{e.name}</td>
+                    <td>{e.gender}</td>
+                    <td>{e.age}</td>
+                    <td>{e.position}</td>
+                </tr>
+            )
+        });
         return (
             <div className="skin-blue sidebar-mini">
                 <div className="wrapper">
@@ -25,8 +60,8 @@ var HomePage = React.createClass({
                                     <li className="dropdown user user-menu">
                                         <a href="#" className="dropdown-toggle">
                                             <div
-                                                className="hd-user-image">{this.props.Login.name.substring(0, 1)}</div>
-                                            <span className="hidden-xs">{this.props.Login.name}</span>
+                                                className="hd-user-image">{this.props.User.name.substring(0, 1)}</div>
+                                            <span className="hidden-xs">{this.props.User.name}</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -62,38 +97,7 @@ var HomePage = React.createClass({
                                                             <th className="sorting">职位</th>
                                                         </tr>
                                                         </thead>
-                                                        <tbody>
-                                                        <tr role="row" className="odd">
-                                                            <td className="sorting_1">戎玲芳</td>
-                                                            <td>女</td>
-                                                            <td>27</td>
-                                                            <td>组长</td>
-                                                        </tr>
-                                                        <tr role="row" className="even">
-                                                            <td className="sorting_1">张小强</td>
-                                                            <td>男</td>
-                                                            <td>25</td>
-                                                            <td>成员</td>
-                                                        </tr>
-                                                        <tr role="row" className="odd">
-                                                            <td className="sorting_1">周磊</td>
-                                                            <td>男</td>
-                                                            <td>25</td>
-                                                            <td>成员</td>
-                                                        </tr>
-                                                        <tr role="row" className="odd">
-                                                            <td className="sorting_1">周彤</td>
-                                                            <td>女</td>
-                                                            <td>26</td>
-                                                            <td>成员</td>
-                                                        </tr>
-                                                        <tr role="row" className="odd">
-                                                            <td className="sorting_1">侯栋</td>
-                                                            <td>男</td>
-                                                            <td>24</td>
-                                                            <td>成员</td>
-                                                        </tr>
-                                                        </tbody>
+                                                        <tbody>{list}</tbody>
                                                     </table>
                                                 </div>
                                             </div>
@@ -134,7 +138,7 @@ var HomePage = React.createClass({
 });
 
 module.exports = connect(state => ({
-    Login: state.componentsReducer.Login
+    User: state.componentsReducer.User
 }), dispatch => ({
     actions: bindActionCreators(ItemsActions, dispatch),
     history: bindActionCreators({replace, goBack, push}, dispatch)

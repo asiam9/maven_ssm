@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.hd.dao.UserDao;
 import com.hd.domain.User;
 
+import java.util.List;
+
 
 @Service  
 public class UserServiceImpl implements UserService {
@@ -21,6 +23,11 @@ public class UserServiceImpl implements UserService {
     public User login(User user) {
         return userDao.login(user);
 
+    }
+
+    @Override
+    public List<User> selectUserList() {
+        return userDao.selectUserList();
     }
 
 }

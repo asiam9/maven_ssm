@@ -8,7 +8,8 @@ import {bindActionCreators} from "redux";
 import {UserRoute} from "UserRoute";
 import {connect} from "react-redux";
 import Api from "Api";
-var initialParams = require('InitialProps').Login;
+var initialParams = require('InitialProps').User;
+import {replace, goBack, push} from 'redux-router';
 
 var Login = React.createClass({
 
@@ -16,7 +17,7 @@ var Login = React.createClass({
 
     getDefaultProps: function () {
         return {
-            Login: initialParams
+            User: initialParams
         }
     },
     getInitialState: function () {
@@ -41,19 +42,18 @@ var Login = React.createClass({
                 password: password
             };
             self.loginAPI(params, function (data) {
-                self.props.Login.loginName = data.loginName;
-                self.props.Login.password = data.userPassword;
-                self.props.Login.id = data.id;
-                self.props.Login.name = data.name;
+                self.props.User.loginName = data.loginName;
+                self.props.User.password = data.userPassword;
+                self.props.User.id = data.id;
+                self.props.User.name = data.name;
                 let param = {
-                    Login: self.props.Login
+                    User: self.props.User
                 };
                 self.props.actions.changeComponentsState(param);
                 self.props.history.push(UserRoute.HomePage);
             }, function (error) {
                 alert(error);
             });
-
         }
     },
     handleKeyLogin: function (event) {
@@ -110,7 +110,8 @@ var Login = React.createClass({
 });
 
 module.exports = connect(state => ({
-    Login: state.componentsReducer.Login
+    User: state.componentsReducer.User
 }), dispatch => ({
-    actions: bindActionCreators(ItemsActions, dispatch)
+    actions: bindActionCreators(ItemsActions, dispatch),
+    history: bindActionCreators({replace, goBack, push}, dispatch)
 }))(Login);

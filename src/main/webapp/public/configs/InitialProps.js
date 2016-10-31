@@ -6,12 +6,19 @@ const initialProps = {
     /******************************************************************************
      * 用户相关
      ******************************************************************************/
-    Login: {
+    User: {
         loginName: '',
         password:'',
+        name:'',
         id:'',
-        name:''
-    }
+        age:'',
+        gender:'',
+        position:''
+    },
+    UserList:[]
+
+
+
 
 };
 module.exports = initialProps;

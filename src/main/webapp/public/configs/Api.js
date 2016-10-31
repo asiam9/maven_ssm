@@ -7,7 +7,7 @@ function _request(url, type = 'post', params = {}, onSuccess, onFailed = functio
     switch (type) {
         case 'get':
             request
-                .get(url)
+                .get(url+'.do')
                 .query(params)
                 .end(function (err, res) {
                     if (!res) {
@@ -67,5 +67,8 @@ module.exports = {
      ******************************************************************************/
     loginAPI: function (params, onSuccess, onFailed) {
         _request('/api/user/login', 'post', params, onSuccess, onFailed);
-    }
+    },
+    selectUserListAPI: function (params, onSuccess, onFailed) {
+        _request('/api/user/select/list', 'post', params, onSuccess, onFailed);
+    },
 };

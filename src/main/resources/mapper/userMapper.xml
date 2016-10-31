@@ -17,6 +17,11 @@
 		SELECT * FROM t_user WHERE id = #{id}
 	</select>
 
+	<!-- 查询所有记录 -->
+	<select id="selectUserList" resultMap="BaseResultMap">
+		SELECT * FROM t_user
+	</select>
+
 	<!-- 登录 -->
 	<select id="login"  resultMap="BaseResultMap">
 		SELECT * FROM t_user WHERE login_name = #{loginName} AND password = #{password}

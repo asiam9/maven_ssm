@@ -12,6 +12,7 @@ import com.hd.domain.User;
 import com.hd.service.UserService;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/api/user")
@@ -31,6 +32,20 @@ public class UserController {
         }else{
             jsonObject.put("result", false);
             jsonObject.put("message", "未查到该用户");
+        }
+        response.getWriter().print(jsonObject.toString());
+    }
+
+    @RequestMapping(value = "/select/list.do")
+    public void selectUserList(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        List<User> list = userService.selectUserList();
+        if(list!=null){
+            jsonObject.put("result", true);
+            jsonObject.put("data", list);
+        }else{
+            jsonObject.put("result", false);
+            jsonObject.put("message", "列表为空");
         }
         response.getWriter().print(jsonObject.toString());
     }
