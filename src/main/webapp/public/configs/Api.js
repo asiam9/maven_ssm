@@ -32,7 +32,7 @@ function _request(url, type = 'post', params = {}, onSuccess, onFailed = functio
             break;
         case 'post':
             request
-                .post(url)
+                .post(url+'.do')
                 .send(params)
                 .end(function (err, res) {
                     if (!res) {

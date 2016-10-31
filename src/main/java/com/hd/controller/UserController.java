@@ -20,7 +20,7 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    @RequestMapping(value = "/select")
+    @RequestMapping(value = "/select.do")
     public  void selectUserById(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String userId = request.getParameter("userId");
         JSONObject jsonObject = new JSONObject();
@@ -35,7 +35,7 @@ public class UserController {
         response.getWriter().print(jsonObject.toString());
     }
 
-    @RequestMapping(value = "/login")
+    @RequestMapping(value = "/login.do")
     public void login(@RequestBody User user, HttpServletResponse response)throws IOException{
         User user2 = new User();
         user2.setLoginName(user.getLoginName());

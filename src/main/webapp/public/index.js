@@ -14,7 +14,6 @@ import {createHistory} from "history";
 
 
 var Login = require('./components/User/Login'),
-    Test = require('./components/Test'),
     HomePage = require('./components/HomePage');
 
 /******************************************************************************
@@ -25,7 +24,6 @@ let routes = (
     <Router history={browserHistory}>
         <Route path='/' component={Login}/>
         <Route path={UserRoute.Login} component={Login}/>
-        <Route path={UserRoute.Test} component={Test}/>
         <Route path={UserRoute.HomePage} component={HomePage}/>
         <Route path="*" component={Login}/>
     </Router>
