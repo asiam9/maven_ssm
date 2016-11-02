@@ -29,15 +29,15 @@ var HomePage = React.createClass({
     componentWillMount: function () {
         let self = this;
         this.selectUserListAPI({}, function (data) {
-            for(let i=0;i<data.length;i++){
-                self.props.UserList.push(data[i]);
-            }
+            self.setState({
+                UserList:data
+            });
         }, function (error) {
             alert(error);
         });
     },
     render: function () {
-        let list = this.props.UserList.map((e, i) => {
+        let list = this.state.UserList.map((e, i) => {
             return (
                 <tr role="row" className="odd" key={i}>
                     <td className="sorting_1">{e.name}</td>

@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import Api from "Api";
 var initialParams = require('InitialProps').User;
 import {replace, goBack, push} from 'redux-router';
+var objectAssign = require('object-assign');
 
 var Login = React.createClass({
 
@@ -22,13 +23,12 @@ var Login = React.createClass({
     },
     getInitialState: function () {
         return {
-            loginName: '',
-            password: ''
+            User:initialParams
         }
     },
     handleClickLogin: function () {
-        let loginName = this.state.loginName;
-        let password = this.state.password;
+        let loginName = this.state.User.loginName;
+        let password = this.state.User.password;
         let self = this;
         if (loginName == '') {
             alert("请填写登录名");
@@ -37,20 +37,11 @@ var Login = React.createClass({
             alert("请填写密码");
             return false;
         } else {
-            let params = {
-                loginName: loginName,
-                password: password
-            };
-            self.loginAPI(params, function (data) {
-                self.props.User.loginName = data.loginName;
-                self.props.User.password = data.userPassword;
-                self.props.User.id = data.id;
-                self.props.User.name = data.name;
-                //self.props.User = data;
-                let param = {
-                    User: self.props.User
-                };
-                self.props.actions.changeComponentsState(param);
+            self.loginAPI(this.state.User, function (data) {
+                self.setState({
+                   User:objectAssign(self.state.User,data)
+                });
+                self.props.actions.changeComponentsState(self.state);
                 self.props.history.push(UserRoute.HomePage);
             }, function (error) {
                 alert(error);
@@ -63,13 +54,19 @@ var Login = React.createClass({
         }
     },
     handleChangeName: function (event) {
+        let param = {
+            loginName:event.target.value
+        };
         this.setState({
-            loginName: event.target.value
+            User:objectAssign(this.state.User,param)
         });
     },
     handleChangePassword: function (event) {
+        let param = {
+            password:event.target.value
+        };
         this.setState({
-            password: event.target.value
+            User:objectAssign(this.state.User,param)
         });
     },
     render: function () {
