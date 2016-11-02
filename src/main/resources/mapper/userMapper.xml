@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hd.dao.UserDao">
-<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！-->
+<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称一致-->
 	<resultMap id="BaseResultMap" type="com.hd.domain.User">
-		<id column="id" property="id" jdbcType="VARCHAR" />
+		<id column="id" property="id" jdbcType="INTEGER" />
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="password" property="password" jdbcType="VARCHAR" />
 		<result column="login_name" property="loginName" jdbcType="VARCHAR" />
@@ -12,14 +12,25 @@
 		<result column="age" property="age" jdbcType="VARCHAR" />
 		<result column="position" property="position" jdbcType="VARCHAR" />
 	</resultMap>
-	<!-- 查询单条记录 -->
+
+	<!-- 查询单个用户信息 -->
 	<select id="selectUserById" parameterType="String" resultMap="BaseResultMap">
 		SELECT * FROM t_user WHERE id = #{id}
 	</select>
 
-	<!-- 查询所有记录 -->
+	<!-- 查询所有用户信息 -->
 	<select id="selectUserList" resultMap="BaseResultMap">
 		SELECT * FROM t_user
+	</select>
+
+	<!-- 查询所有用户信息-分页 -->
+	<select id="selectUserListByPage" resultMap="BaseResultMap">
+		SELECT * FROM t_user LIMIT #{start,jdbcType=INTEGER},#{end,jdbcType=INTEGER}
+	</select>
+
+	<!-- 查询用户总数 -->
+	<select id="selectCount" resultType="INTEGER">
+		SELECT COUNT(*) FROM t_user
 	</select>
 
 	<!-- 登录 -->

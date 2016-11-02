@@ -22,15 +22,30 @@ var HomePage = React.createClass({
     },
     getInitialState: function () {
         return {
-            UserList: initialParams
+            UserList: initialParams,
+            pageNow:1,
+            pageSize:10,
+            count:0
         }
     },
-
+    handleChangePageSize:function (event) {
+        this.setState({
+            pageSize:event.target.value
+        }, () => this.handleRefresh());
+    },
     componentWillMount: function () {
+        this.handleRefresh();
+    },
+    handleRefresh:function () {
         let self = this;
-        this.selectUserListAPI({}, function (data) {
+        var param = {
+            pageNow: parseInt(self.state.pageNow),
+            pageSize: parseInt(self.state.pageSize)
+        };
+        this.selectUserListAPI(param, function (data) {
             self.setState({
-                UserList:data
+                UserList:data.list,
+                count:data.count
             });
         }, function (error) {
             alert(error);
@@ -47,6 +62,10 @@ var HomePage = React.createClass({
                 </tr>
             )
         });
+        let page = '';
+        for(let i=0;i<this.state.count.length;i++){
+            page = page + <li className="paginate_button active"><a href="#">{i+1}</a></li>
+        }
         return (
             <div className="skin-blue sidebar-mini">
                 <div className="wrapper">
@@ -71,6 +90,24 @@ var HomePage = React.createClass({
                 </div>
                 <div className="content-wrapper">
                     <section className="content">
+                        <div className="row">
+                            <div className="col-sm-6">
+                                <div className="dataTables_length" id="example1_length">
+                                    <label>每页显示:
+                                        <select name="example1_length"  className="form-control input-sm" onChange={this.handleChangePageSize}>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                        </select>
+                                    </label>
+                                </div>
+                            </div>
+                            <div className="col-sm-6">
+                                <div id="example1_filter" className="dataTables_filter">
+                                    <label>查询:<input type="search" className="form-control input-sm" placeholder="请输入姓名"/></label>
+                                </div>
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-xs-12">
                                 <div className="box">
@@ -104,7 +141,7 @@ var HomePage = React.createClass({
                                             <div className="row">
                                                 <div className="col-sm-5">
                                                     <div className="dataTables_info" id="example2_info" role="status">
-                                                        Showing 1 to 10 of 57 entries
+                                                        第<span style={{color:'red'}}>{this.state.pageNow}</span>页,共<span style={{color:'red'}}>{this.state.count}</span>条数据
                                                     </div>
                                                 </div>
                                                 <div className="col-sm-7">
@@ -115,8 +152,8 @@ var HomePage = React.createClass({
                                                                 id="example2_previous">
                                                                 <a href="#">上一页</a>
                                                             </li>
-                                                            <li className="paginate_button active"><a href="#">1</a>
-                                                            </li>
+                                                            {page}
+                                                            <li className="paginate_button active"><a href="#">1</a></li>
                                                             <li className="paginate_button "><a href="#">2</a></li>
                                                             <li className="paginate_button next" id="example2_next">
                                                                 <a href="#">下一页</a>

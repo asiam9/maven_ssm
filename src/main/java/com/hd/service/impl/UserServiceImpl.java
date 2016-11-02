@@ -30,4 +30,14 @@ public class UserServiceImpl implements UserService {
         return userDao.selectUserList();
     }
 
+    @Override
+    public List<User> selectUserListByPage(int start ,int end) {
+        return userDao.selectUserListByPage(start,end);
+    }
+
+    @Override
+    public int selectCount() {
+        return userDao.selectCount();
+    }
+
 }

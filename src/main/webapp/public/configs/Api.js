@@ -69,6 +69,6 @@ module.exports = {
         _request('/api/user/login', 'post', params, onSuccess, onFailed);
     },
     selectUserListAPI: function (params, onSuccess, onFailed) {
-        _request('/api/user/select/list', 'post', params, onSuccess, onFailed);
+        _request('/api/user/select/list/page', 'post', params, onSuccess, onFailed);
     },
 };

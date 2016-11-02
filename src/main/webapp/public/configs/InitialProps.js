@@ -10,7 +10,6 @@ const initialProps = {
         loginName: '',
         password:'',
         name:'',
-        id:'',
         age:'',
         gender:'',
         position:''

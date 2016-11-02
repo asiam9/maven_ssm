@@ -12,4 +12,8 @@ public interface UserService {
 
 	List<User> selectUserList();
 
+	List<User> selectUserListByPage(int start ,int end);
+
+	int selectCount();
+
 }
