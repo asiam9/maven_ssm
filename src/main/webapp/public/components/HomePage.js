@@ -81,7 +81,7 @@ var HomePage = React.createClass({
             index:parseInt(event.target.dataset.id)
         }, function () {
             this.handleRefresh();
-        });
+        }); 
     },
     handleClickSelectMember: function () {
         let self = this;
