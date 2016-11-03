@@ -28,7 +28,9 @@ var HomePage = React.createClass({
             pageSize: 10,
             count: 0,
             pageList: [],
-            index: 1
+            index: 1,
+            disabled_p:true,
+            disabled_n:false
         }
     },
     handleChangePageSize: function (event) {
@@ -100,6 +102,39 @@ var HomePage = React.createClass({
             });
         }
     },
+    handleClickPreviousPage:function () {
+        if(1!=this.state.pageNow){
+            this.setState({
+                pageNow:this.state.pageNow-1,
+                index:this.state.index-1,
+                disabled_p:false
+            },function () {
+                this.handleRefresh();
+            });
+        }else{
+            this.setState({
+                disabled_p:true,
+                disabled_n:false
+            });
+        }
+    },
+    handleClickNextPage:function () {
+        let pageNum = parseInt(this.state.count / (this.state.pageSize)) + 1;
+        if(pageNum!=this.state.pageNow){
+            this.setState({
+                pageNow:this.state.pageNow+1,
+                index:this.state.index+1,
+                disabled_n:false
+            },function () {
+                this.handleRefresh();
+            });
+        }else{
+            this.setState({
+                disabled_n:true,
+                disabled_p:false
+            });
+        }
+    },
     render: function () {
         let list = this.state.UserList.map((e, i) => {
             return (
@@ -111,6 +146,13 @@ var HomePage = React.createClass({
                 </tr>
             )
         });
+        let className_p =  classNames(
+            'paginate_button previous', {'disabled': this.state.disabled_p});
+        let previousPage = (
+            <li className={className_p} id="example2_previous">
+                <span onClick={this.handleClickPreviousPage}>上一页</span>
+            </li>
+        );
         let page = this.state.pageList.map((e, i) => {
             let className = classNames(
                 'paginate_button', {'active': this.state.index == (i + 1)});
@@ -118,6 +160,13 @@ var HomePage = React.createClass({
                 <li className={className} key={i}><span data-id={e.pageNow} onClick={this.handleClickSelectPage}>{e.pageNow}</span></li>
             )
         });
+        let className_n =  classNames(
+            'paginate_button next', {'disabled': this.state.disabled_n});
+        let nextPage = (
+            <li className={className_n} id="example2_next">
+                <span onClick={this.handleClickNextPage}>下一页</span>
+            </li>
+        );
         let styleObject = {
             marginLeft: '20px',
             border: '1px solid ##3C8DBC',
@@ -213,14 +262,7 @@ var HomePage = React.createClass({
                                                     <div className="dataTables_paginate paging_simple_numbers"
                                                          id="example2_paginate">
                                                         <ul className="pagination">
-                                                            <li className="paginate_button previous disabled"
-                                                                id="example2_previous">
-                                                                <a href="#">上一页</a>
-                                                            </li>
-                                                            {page}
-                                                            <li className="paginate_button next" id="example2_next">
-                                                                <a href="#">下一页</a>
-                                                            </li>
+                                                            {previousPage}{page}{nextPage}
                                                         </ul>
                                                     </div>
                                                 </div>
