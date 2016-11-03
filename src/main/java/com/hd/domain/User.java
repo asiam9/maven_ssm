@@ -1,5 +1,7 @@
 package com.hd.domain;
 
+import java.util.Date;
+
 public class User {
 	
 	private int id;
@@ -9,6 +11,7 @@ public class User {
     private String gender;
     private String age;
     private String position;
+    private Date date;
 
     public User() {
     }
@@ -68,5 +71,13 @@ public class User {
 
     public void setLoginName(String loginName) {
         this.loginName = loginName;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

@@ -40,7 +40,7 @@ var HeaderLayout = React.createClass({
                                         <img src="public/build/images/user2-160x160.jpg" className="img-circle" alt="User Image" />
                                             <p>
                                                 {this.props.User.name} - {this.props.User.position}
-                                                <small>Member since Nov. 2012</small>
+                                                <small>{this.props.User.date}入职</small>
                                             </p>
                                     </li>
                                     <li className="user-footer">

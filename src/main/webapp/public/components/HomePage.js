@@ -8,6 +8,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {UserRoute} from "UserRoute";
 import Api from "Api";
+import CommonFun from "CommonFun";
 import {replace, goBack, push} from 'redux-router';
 var initialParams = require('InitialProps').UserList;
 var classNames = require('classnames');
@@ -16,7 +17,7 @@ var SidebarLayout = require('SidebarLayout');
 
 var HomePage = React.createClass({
 
-    mixins: [Api],
+    mixins: [Api,CommonFun],
 
     /******************************************************************************
      * life cycle functions
@@ -34,8 +35,8 @@ var HomePage = React.createClass({
             count: 0,
             pageList: [],
             index: 1,
-            disabled_p:true,
-            disabled_n:false
+            disabled_p: true,
+            disabled_n: false
         }
     },
     componentWillMount: function () {
@@ -48,8 +49,8 @@ var HomePage = React.createClass({
     handleChangePageSize: function (event) {
         this.setState({
             pageSize: event.target.value,
-            pageNow:1,
-            index:1
+            pageNow: 1,
+            index: 1
         }, () => this.handleRefresh());
     },
     handleRefresh: function () {
@@ -78,10 +79,10 @@ var HomePage = React.createClass({
     handleClickSelectPage: function (event) {
         this.setState({
             pageNow: parseInt(event.target.dataset.id),
-            index:parseInt(event.target.dataset.id)
+            index: parseInt(event.target.dataset.id)
         }, function () {
             this.handleRefresh();
-        }); 
+        });
     },
     handleClickSelectMember: function () {
         let self = this;
@@ -102,8 +103,8 @@ var HomePage = React.createClass({
                 self.setState({
                     UserList: data.list,
                     count: data.count,
-                    index:1,
-                    pageNow:1,
+                    index: 1,
+                    pageNow: 1,
                     pageList: array
                 });
             }, function (error) {
@@ -111,36 +112,36 @@ var HomePage = React.createClass({
             });
         }
     },
-    handleClickPreviousPage:function () {
-        if('1'!=this.state.pageNow){
+    handleClickPreviousPage: function () {
+        if ('1' != this.state.pageNow) {
             this.setState({
-                pageNow:this.state.pageNow-1,
-                index:this.state.index-1,
-                disabled_p:false
-            },function () {
+                pageNow: this.state.pageNow - 1,
+                index: this.state.index - 1,
+                disabled_p: false
+            }, function () {
                 this.handleRefresh();
             });
-        }else{
+        } else {
             this.setState({
-                disabled_p:true,
-                disabled_n:false
+                disabled_p: true,
+                disabled_n: false
             });
         }
     },
-    handleClickNextPage:function () {
+    handleClickNextPage: function () {
         let pageNum = parseInt(this.state.count / (this.state.pageSize)) + 1;
-        if(pageNum!=parseInt(this.state.pageNow)){
+        if (pageNum != parseInt(this.state.pageNow)) {
             this.setState({
-                pageNow:this.state.pageNow+1,
-                index:this.state.index+1,
-                disabled_n:false
-            },function () {
+                pageNow: this.state.pageNow + 1,
+                index: this.state.index + 1,
+                disabled_n: false
+            }, function () {
                 this.handleRefresh();
             });
-        }else{
+        } else {
             this.setState({
-                disabled_n:true,
-                disabled_p:false
+                disabled_n: true,
+                disabled_p: false
             });
         }
     },
@@ -156,10 +157,11 @@ var HomePage = React.createClass({
                     <td>{e.gender}</td>
                     <td>{e.age}</td>
                     <td>{e.position}</td>
+                    <td>{this.dateTransform(e.date.time)}</td>
                 </tr>
             )
         });
-        let className_p =  classNames(
+        let className_p = classNames(
             'paginate_button previous', {'disabled': this.state.disabled_p});
         let previousPage = (
             <li className={className_p} id="example2_previous">
@@ -170,10 +172,11 @@ var HomePage = React.createClass({
             let className = classNames(
                 'paginate_button', {'active': this.state.index == (i + 1)});
             return (
-                <li className={className} key={i}><span data-id={e.pageNow} onClick={this.handleClickSelectPage}>{e.pageNow}</span></li>
+                <li className={className} key={i}><span data-id={e.pageNow}
+                                                        onClick={this.handleClickSelectPage}>{e.pageNow}</span></li>
             )
         });
-        let className_n =  classNames(
+        let className_n = classNames(
             'paginate_button next', {'disabled': this.state.disabled_n});
         let nextPage = (
             <li className={className_n} id="example2_next">
@@ -182,8 +185,15 @@ var HomePage = React.createClass({
         );
         let styleObject = {
             marginLeft: '20px',
-            border: '1px solid ##3C8DBC',
-            backgroundColor: '#3C8DBC'
+            border: '1px solid #605CA8',
+            backgroundColor: '#605CA8',
+            borderRadius: '5px',
+            fontSize: '12px',
+            width: '30px',
+            height: '20px',
+            textAlign: 'center',
+            lineHeight: '20px',
+            color: '#ffffff'
         };
         return (
             <div>
@@ -239,6 +249,7 @@ var HomePage = React.createClass({
                                                             <th className="sorting">性别</th>
                                                             <th className="sorting">年龄</th>
                                                             <th className="sorting">职位</th>
+                                                            <th className="sorting">入职日期</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody>{list}</tbody>

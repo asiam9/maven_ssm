@@ -11,11 +11,12 @@
 		<result column="gender" property="gender" jdbcType="VARCHAR" />
 		<result column="age" property="age" jdbcType="VARCHAR" />
 		<result column="position" property="position" jdbcType="VARCHAR" />
+		<result column="date" property="date" jdbcType="TIMESTAMP" />
 	</resultMap>
 
 	<!-- 查询单个用户信息 -->
 	<select id="selectUserByName" resultMap="BaseResultMap">
-		SELECT * FROM t_user WHERE name = #{name}
+		SELECT * FROM t_user WHERE name like concat(concat('%',#{name}),'%')
 	</select>
 
 	<!-- 查询所有用户信息 -->

@@ -8,13 +8,14 @@ import {bindActionCreators} from "redux";
 import {UserRoute} from "UserRoute";
 import {connect} from "react-redux";
 import Api from "Api";
+import CommonFun from "CommonFun";
 var initialParams = require('InitialProps').User;
 import {replace, goBack, push} from 'redux-router';
 var objectAssign = require('object-assign');
 
 var Login = React.createClass({
 
-    mixins: [Api],
+    mixins: [Api,CommonFun],
 
     /******************************************************************************
      * life cycle functions
@@ -45,6 +46,7 @@ var Login = React.createClass({
             return false;
         } else {
             self.loginAPI(this.state.User, function (data) {
+                data.user.date = self.dateTransform(data.user.date.time);
                 self.setState({
                    User:objectAssign(self.state.User,data.user)
                 });

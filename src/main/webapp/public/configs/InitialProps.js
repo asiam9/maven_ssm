@@ -12,7 +12,8 @@ const initialProps = {
         name:'',
         age:'',
         gender:'',
-        position:''
+        position:'',
+        date:''
     },
     UserList:[]
 
