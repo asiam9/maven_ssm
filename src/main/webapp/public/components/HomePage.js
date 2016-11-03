@@ -77,8 +77,8 @@ var HomePage = React.createClass({
     },
     handleClickSelectPage: function (event) {
         this.setState({
-            pageNow: event.target.dataset.id,
-            index:event.target.dataset.id
+            pageNow: parseInt(event.target.dataset.id),
+            index:parseInt(event.target.dataset.id)
         }, function () {
             this.handleRefresh();
         });
@@ -112,7 +112,7 @@ var HomePage = React.createClass({
         }
     },
     handleClickPreviousPage:function () {
-        if(1!=this.state.pageNow){
+        if('1'!=this.state.pageNow){
             this.setState({
                 pageNow:this.state.pageNow-1,
                 index:this.state.index-1,
@@ -129,7 +129,7 @@ var HomePage = React.createClass({
     },
     handleClickNextPage:function () {
         let pageNum = parseInt(this.state.count / (this.state.pageSize)) + 1;
-        if(pageNum!=this.state.pageNow){
+        if(pageNum!=parseInt(this.state.pageNow)){
             this.setState({
                 pageNow:this.state.pageNow+1,
                 index:this.state.index+1,
