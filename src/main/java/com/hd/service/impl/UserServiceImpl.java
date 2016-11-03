@@ -15,9 +15,8 @@ public class UserServiceImpl implements UserService {
 	@Autowired
     private UserDao userDao;  
   
-    public User selectUserById(User user) {
-        return userDao.selectUserById(user);
-          
+    public List<User> selectUserByName(User user) {
+        return userDao.selectUserByName(user);
     }
 
     public User login(User user) {
@@ -38,6 +37,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public int selectCount() {
         return userDao.selectCount();
+    }
+
+    @Override
+    public int selectSearchCount(User user) {
+        return userDao.selectSearchCount(user);
     }
 
 }

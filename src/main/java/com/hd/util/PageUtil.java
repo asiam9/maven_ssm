@@ -10,9 +10,4 @@ public class PageUtil {
     public int getStart(Page page) {
         return (page.getPageNow() - 1) * page.getPageSize();
     }
-
-    public int getEnd(Page page) {
-        return page.getPageNow() * page.getPageSize();
-    }
-
 }

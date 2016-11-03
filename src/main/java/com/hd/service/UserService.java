@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserService {
 
-	User selectUserById(User user);
+	List<User> selectUserByName(User user);
 
 	User login(User user);
 
@@ -15,5 +15,7 @@ public interface UserService {
 	List<User> selectUserListByPage(int start ,int end);
 
 	int selectCount();
+
+	int selectSearchCount(User user);
 
 }

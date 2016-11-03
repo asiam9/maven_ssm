@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserDao {
 
-	public User selectUserById(User user);
+	public List<User> selectUserByName(User user);
 
 	public User login(User user);
 
@@ -17,5 +17,7 @@ public interface UserDao {
 	public List<User> selectUserListByPage(@Param("start")int start , @Param("end")int end);
 
 	public int selectCount();
+
+	public int selectSearchCount(User user);
 
 }

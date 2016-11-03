@@ -7,7 +7,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;  
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;  
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
 
 @ContextConfiguration(locations = { "classpath:application.xml" })  
 
@@ -20,7 +22,7 @@ public class SpringTestCase extends AbstractJUnit4SpringContextTests {
     public void selectUserByIdTest(){
         User user = new User();
         user.setName("侯栋");
-        User user2 = userService.selectUserById(user);
-        System.out.println(user2.getName() + ":" + user2.getPassword());
+        List<User> list = userService.selectUserByName(user);
+        System.out.println(list);
     }
 }

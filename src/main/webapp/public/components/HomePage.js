@@ -10,6 +10,7 @@ import {UserRoute} from "UserRoute";
 import Api from "Api";
 import {replace, goBack, push} from 'redux-router';
 var initialParams = require('InitialProps').UserList;
+var classNames = require('classnames');
 
 var HomePage = React.createClass({
 
@@ -23,67 +24,78 @@ var HomePage = React.createClass({
     getInitialState: function () {
         return {
             UserList: initialParams,
-            pageNow:1,
-            pageSize:10,
-            count:0,
-            pageNum:[]
+            pageNow: 1,
+            pageSize: 10,
+            count: 0,
+            pageList: [],
+            index: 1
         }
     },
-    handleChangePageSize:function (event) {
+    handleChangePageSize: function (event) {
         this.setState({
-            pageSize:event.target.value
+            pageSize: event.target.value,
+            pageNow:1,
+            index:1
         }, () => this.handleRefresh());
     },
     componentWillMount: function () {
         this.handleRefresh();
     },
-    handleRefresh:function () {
+    handleRefresh: function () {
         let self = this;
         let param = {
             pageNow: parseInt(self.state.pageNow),
             pageSize: parseInt(self.state.pageSize)
         };
         this.selectUserListByPageAPI(param, function (data) {
-            let pageNum = parseInt(data.count/(self.state.pageSize))+1;
+            let pageNum = parseInt(data.count / (self.state.pageSize)) + 1;
             let array = [];
-            for(let i=0;i<pageNum;i++){
+            for (let i = 0; i < pageNum; i++) {
                 let object = {};
-                object.pageNow = i+1;
-                object.checked = false;
+                object.pageNow = i + 1;
                 array.push(object);
             }
             self.setState({
-                UserList:data.list,
-                count:data.count,
-                pageNum:array
+                UserList: data.list,
+                count: data.count,
+                pageList: array
             });
         }, function (error) {
             alert(error);
         });
     },
-    handleClickSelectPage:function (event) {
+    handleClickSelectPage: function (event) {
         this.setState({
-            pageNow:event.target.value
-        },function () {
+            pageNow: event.target.dataset.id,
+            index:event.target.dataset.id
+        }, function () {
             this.handleRefresh();
         });
     },
-    handleClickSelectMember:function () {
+    handleClickSelectMember: function () {
         let self = this;
-        if(this.refs.name.value==''){
+        if (this.refs.name.value == '') {
             alert('请输入姓名进行查询!');
-        }else{
+        } else {
             let param = {
-                name:this.refs.name.value
+                name: this.refs.name.value
             };
-            this.selectUserByIdAPI(param,function (data) {
-                let list = [];
-                list.push(data.user);
+            this.selectUserByIdAPI(param, function (data) {
+                let pageNum = parseInt(data.count / (self.state.pageSize)) + 1;
+                let array = [];
+                for (let i = 0; i < pageNum; i++) {
+                    let object = {};
+                    object.pageNow = i + 1;
+                    array.push(object);
+                }
                 self.setState({
-                    UserList:list,
-                    count:1
+                    UserList: data.list,
+                    count: data.count,
+                    index:1,
+                    pageNow:1,
+                    pageList: array
                 });
-            },function (error) {
+            }, function (error) {
                 alert(error);
             });
         }
@@ -99,16 +111,12 @@ var HomePage = React.createClass({
                 </tr>
             )
         });
-        let page = this.state.pageNum.map((e, i) => {
-            if(e.checked){
-                return (
-                    <li className="paginate_button active" key={i}><span>{i+1}</span></li>
-                )
-            }else{
-                return (
-                    <li className="paginate_button" key={i}><span onClick={this.handleClickSelectPage}>{i+1}</span></li>
-                )
-            }
+        let page = this.state.pageList.map((e, i) => {
+            let className = classNames(
+                'paginate_button', {'active': this.state.index == (i + 1)});
+            return (
+                <li className={className} key={i}><span data-id={e.pageNow} onClick={this.handleClickSelectPage}>{e.pageNow}</span></li>
+            )
         });
         let styleObject = {
             marginLeft: '20px',
@@ -144,7 +152,8 @@ var HomePage = React.createClass({
                                 <div className="dataTables_length" id="example1_length">
                                     每页显示:&nbsp;&nbsp;
                                     <label>
-                                        <select name="example1_length"  className="form-control input-sm" onChange={this.handleChangePageSize}>
+                                        <select name="example1_length" className="form-control input-sm"
+                                                onChange={this.handleChangePageSize}>
                                             <option value="10">10</option>
                                             <option value="20">20</option>
                                             <option value="30">30</option>
@@ -155,7 +164,8 @@ var HomePage = React.createClass({
                             <div className="col-sm-6">
                                 <div id="example1_filter" className="dataTables_filter">
                                     <label>
-                                        <input type="search" className="form-control input-sm" placeholder="请输入姓名" ref="name"/>
+                                        <input type="search" className="form-control input-sm" placeholder="请输入姓名"
+                                               ref="name"/>
                                     </label>
                                     <label style={styleObject} onClick={this.handleClickSelectMember}>查询</label>
                                 </div>
@@ -194,7 +204,9 @@ var HomePage = React.createClass({
                                             <div className="row">
                                                 <div className="col-sm-5">
                                                     <div className="dataTables_info" id="example2_info" role="status">
-                                                        第<span style={{color:'red'}}>{this.state.pageNow}</span>页,共<span style={{color:'red'}}>{this.state.count}</span>条数据
+                                                        第<span
+                                                        style={{color: 'red'}}>{this.state.pageNow}</span>页,共<span
+                                                        style={{color: 'red'}}>{this.state.count}</span>条数据
                                                     </div>
                                                 </div>
                                                 <div className="col-sm-7">

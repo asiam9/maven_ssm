@@ -14,7 +14,7 @@
 	</resultMap>
 
 	<!-- 查询单个用户信息 -->
-	<select id="selectUserById" resultMap="BaseResultMap">
+	<select id="selectUserByName" resultMap="BaseResultMap">
 		SELECT * FROM t_user WHERE name = #{name}
 	</select>
 
@@ -31,6 +31,11 @@
 	<!-- 查询用户总数 -->
 	<select id="selectCount" resultType="INTEGER">
 		SELECT COUNT(*) FROM t_user
+	</select>
+
+	<!-- 查询搜索用户总数 -->
+	<select id="selectSearchCount" resultType="INTEGER">
+		SELECT COUNT(*) FROM t_user WHERE name = #{name}
 	</select>
 
 	<!-- 登录 -->

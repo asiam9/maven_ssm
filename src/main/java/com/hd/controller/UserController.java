@@ -57,10 +57,12 @@ public class UserController {
     @RequestMapping(value = "/select/user.do")
     public  void selectUserById(@RequestBody User user, HttpServletResponse response) throws IOException {
         JSONObject jsonObject = new JSONObject();
-        User user2 = userService.selectUserById(user);
+        List<User> list = userService.selectUserByName(user);
+        int count = userService.selectSearchCount(user);
         Result result = new Result();
-        if(user2!=null){
-            result.setUser(user2);
+        if(list!=null){
+            result.setList(list);
+            result.setCount(count);
             jsonObject.put("result", true);
         }else{
             jsonObject.put("result", false);
@@ -99,9 +101,8 @@ public class UserController {
     public void selectUserListByPage(@RequestBody Page page, HttpServletResponse response) throws IOException {
         PageUtil pageUtil = new PageUtil();
         int start = pageUtil.getStart(page);
-        int end = pageUtil.getEnd(page);
         JSONObject jsonObject = new JSONObject();
-        List<User> list = userService.selectUserListByPage(start,end);
+        List<User> list = userService.selectUserListByPage(start,page.getPageSize());
         int count = userService.selectCount();
         Result result = new Result();
         if(list!=null&&count!=0){

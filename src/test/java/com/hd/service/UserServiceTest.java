@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.hd.baseTest.SpringTestCase;
 import com.hd.domain.User;
 
+import java.util.List;
+
 public class UserServiceTest extends SpringTestCase {
 	
 	@Autowired  
@@ -14,7 +16,7 @@ public class UserServiceTest extends SpringTestCase {
     public void selectUserByIdTest(){
 	    User user = new User();
         user.setName("侯栋");
-        User user2 = userService.selectUserById(user);
-        System.out.println(user2.getName() + ":" + user2.getPassword());
+        List<User> list = userService.selectUserByName(user);
+        System.out.println(list);
     }  
 }
