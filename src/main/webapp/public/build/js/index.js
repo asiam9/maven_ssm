@@ -40088,6 +40088,7 @@ webpackJsonp([0,1],[
 	var initialParams = __webpack_require__(380).UserList;
 	var classNames = __webpack_require__(382);
 	var HeaderLayout = __webpack_require__(383);
+	var SidebarLayout = __webpack_require__(384);
 
 	var HomePage = React.createClass({
 	    displayName: 'HomePage',
@@ -40247,7 +40248,7 @@ webpackJsonp([0,1],[
 	            border: '1px solid ##3C8DBC',
 	            backgroundColor: '#3C8DBC'
 	        };
-	        return React.createElement('div', null, React.createElement(HeaderLayout, null), React.createElement('div', { className: 'content-wrapper' }, React.createElement('section', { className: 'content' }, React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-sm-6' }, React.createElement('div', { className: 'dataTables_length', id: 'example1_length' }, '\u6BCF\u9875\u663E\u793A:\xA0\xA0', React.createElement('label', null, React.createElement('select', { name: 'example1_length', className: 'form-control input-sm',
+	        return React.createElement('div', null, React.createElement(HeaderLayout, null), React.createElement(SidebarLayout, null), React.createElement('div', { className: 'content-wrapper' }, React.createElement('section', { className: 'content' }, React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-sm-6' }, React.createElement('div', { className: 'dataTables_length', id: 'example1_length' }, '\u6BCF\u9875\u663E\u793A:\xA0\xA0', React.createElement('label', null, React.createElement('select', { name: 'example1_length', className: 'form-control input-sm',
 	            onChange: this.handleChangePageSize }, React.createElement('option', { value: '10' }, '10'), React.createElement('option', { value: '20' }, '20'), React.createElement('option', { value: '30' }, '30'))))), React.createElement('div', { className: 'col-sm-6' }, React.createElement('div', { id: 'example1_filter', className: 'dataTables_filter' }, React.createElement('label', null, React.createElement('input', { type: 'search', className: 'form-control input-sm', placeholder: '\u8BF7\u8F93\u5165\u59D3\u540D',
 	            ref: 'name' })), React.createElement('label', { style: styleObject, onClick: this.handleClickSelectMember }, '\u67E5\u8BE2')))), React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-xs-12' }, React.createElement('div', { className: 'box' }, React.createElement('div', { className: 'box-header' }, React.createElement('h3', { className: 'box-title' }, '\u6210\u5458\u7BA1\u7406')), React.createElement('div', { className: 'box-body' }, React.createElement('div', { id: 'example2_wrapper',
 	            className: 'dataTables_wrapper form-inline dt-bootstrap' }, React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-sm-6' }), React.createElement('div', { className: 'col-sm-6' })), React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-sm-12' }, React.createElement('table', { id: 'example2',
@@ -40376,6 +40377,56 @@ webpackJsonp([0,1],[
 	})(HeaderLayout);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(322); if (makeExportsHot(module, __webpack_require__(156))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HeaderLayout.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
+
+/***/ },
+/* 384 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(78), RootInstanceProvider = __webpack_require__(86), ReactMount = __webpack_require__(88), React = __webpack_require__(156); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	var _redux = __webpack_require__(325);
+
+	var _reactRedux = __webpack_require__(339);
+
+	/**
+	 * Created by houdong on 16/11/3.
+	 */
+
+	var React = __webpack_require__(156);
+
+	var initialParams = __webpack_require__(380).User;
+	var SidebarLayout = React.createClass({
+	    displayName: "SidebarLayout",
+
+	    /******************************************************************************
+	     * life cycle functions
+	     ******************************************************************************/
+	    getDefaultProps: function getDefaultProps() {
+	        return {
+	            User: initialParams
+	        };
+	    },
+
+	    /******************************************************************************
+	     * render functions
+	     ******************************************************************************/
+	    render: function render() {
+	        return React.createElement("div", { className: "main-sidebar" }, React.createElement("div", { className: "sidebar" }, React.createElement("div", { className: "user-panel" }, React.createElement("div", { className: "pull-left image" }, React.createElement("img", { src: "public/build/images/user2-160x160.jpg", className: "img-circle", alt: "User Image" })), React.createElement("div", { className: "pull-left info" }, React.createElement("p", null, "User Name"), React.createElement("a", { href: "#" }, React.createElement("i", { className: "fa fa-circle text-success" }), " Online"))), React.createElement("form", { action: "#", method: "get", className: "sidebar-form" }, React.createElement("div", { className: "input-group" }, React.createElement("input", { type: "text", name: "q", className: "form-control", placeholder: "Search..." }), React.createElement("span", { className: "input-group-btn" }, React.createElement("button", { type: "submit", name: "search", id: "search-btn", className: "btn btn-flat" }, React.createElement("i", { className: "fa fa-search" }))))), React.createElement("ul", { className: "sidebar-menu" }, React.createElement("li", { className: "header" }, "HEADER"), React.createElement("li", { className: "active" }, React.createElement("a", { href: "#" }, React.createElement("span", null, "Link"))), React.createElement("li", null, React.createElement("a", { href: "#" }, React.createElement("span", null, "Another Link"))), React.createElement("li", { className: "treeview" }, React.createElement("a", { href: "#" }, React.createElement("span", null, "Multilevel"), " ", React.createElement("i", { className: "fa fa-angle-left pull-right" })), React.createElement("ul", { className: "treeview-menu" }, React.createElement("li", null, React.createElement("a", { href: "#" }, "Link in level 2")), React.createElement("li", null, React.createElement("a", { href: "#" }, "Link in level 2")))))));
+	    }
+	});
+
+	module.exports = (0, _reactRedux.connect)(function (state) {
+	    return {
+	        User: state.componentsReducer.User
+	    };
+	}, function (dispatch) {
+	    return {};
+	})(SidebarLayout);
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(322); if (makeExportsHot(module, __webpack_require__(156))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "SidebarLayout.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ }

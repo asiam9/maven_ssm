@@ -23,18 +23,35 @@ var HeaderLayout = React.createClass({
     render: function () {
         return (
             <header className="main-header">
-                <a href="javascript:void(0);" className="logo">
-                    <span className="logo-lg"><b>H5</b>管理后台</span>
-                </a>
+                <span  className="logo">H5管理后台</span>
                 <nav className="navbar navbar-static-top" role="navigation">
+                    <a href="#" className="sidebar-toggle" data-toggle="offcanvas" role="button">
+                        <span className="sr-only">Toggle navigation</span>
+                    </a>
                     <div className="navbar-custom-menu">
                         <ul className="nav navbar-nav">
                             <li className="dropdown user user-menu">
-                                <a href="#" className="dropdown-toggle">
-                                    <div
-                                        className="hd-user-image">{this.props.User.name.substring(0, 1)}</div>
-                                    <span className="hidden-xs">{this.props.User.name}</span>
+                                <a href="#" className="dropdown-toggle" data-toggle="dropdown">
+                                    <img src="public/build/images/user2-160x160.jpg" className="user-image" alt="User Image" />
+                                        <span className="hidden-xs">{this.props.User.name}</span>
                                 </a>
+                                <ul className="dropdown-menu">
+                                    <li className="user-header">
+                                        <img src="public/build/images/user2-160x160.jpg" className="img-circle" alt="User Image" />
+                                            <p>
+                                                {this.props.User.name} - {this.props.User.position}
+                                                <small>Member since Nov. 2012</small>
+                                            </p>
+                                    </li>
+                                    <li className="user-footer">
+                                        <div className="pull-left">
+                                            <a href="#" className="btn btn-default btn-flat">个人主页</a>
+                                        </div>
+                                        <div className="pull-right">
+                                            <a href="/login.page" className="btn btn-default btn-flat">退出</a>
+                                        </div>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </div>

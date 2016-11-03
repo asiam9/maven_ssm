@@ -12,6 +12,7 @@ import {replace, goBack, push} from 'redux-router';
 var initialParams = require('InitialProps').UserList;
 var classNames = require('classnames');
 var HeaderLayout = require('HeaderLayout');
+var SidebarLayout = require('SidebarLayout');
 
 var HomePage = React.createClass({
 
@@ -187,6 +188,7 @@ var HomePage = React.createClass({
         return (
             <div>
                 <HeaderLayout></HeaderLayout>
+                <SidebarLayout></SidebarLayout>
                 <div className="content-wrapper">
                     <section className="content">
                         <div className="row">

@@ -60,7 +60,7 @@ public class UserController {
         List<User> list = userService.selectUserByName(user);
         int count = userService.selectSearchCount(user);
         Result result = new Result();
-        if(list!=null){
+        if(list!=null&&list.size()!=0){
             result.setList(list);
             result.setCount(count);
             jsonObject.put("result", true);
@@ -81,7 +81,7 @@ public class UserController {
         JSONObject jsonObject = new JSONObject();
         List<User> list = userService.selectUserList();
         Result result = new Result();
-        if(list!=null){
+        if(list!=null&&list.size()!=0){
             jsonObject.put("result", true);
             result.setList(list);
         }else{
