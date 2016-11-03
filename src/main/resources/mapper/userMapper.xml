@@ -14,8 +14,8 @@
 	</resultMap>
 
 	<!-- 查询单个用户信息 -->
-	<select id="selectUserById" parameterType="String" resultMap="BaseResultMap">
-		SELECT * FROM t_user WHERE id = #{id}
+	<select id="selectUserById" resultMap="BaseResultMap">
+		SELECT * FROM t_user WHERE name = #{name}
 	</select>
 
 	<!-- 查询所有用户信息 -->

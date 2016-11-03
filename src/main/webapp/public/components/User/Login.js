@@ -39,7 +39,7 @@ var Login = React.createClass({
         } else {
             self.loginAPI(this.state.User, function (data) {
                 self.setState({
-                   User:objectAssign(self.state.User,data)
+                   User:objectAssign(self.state.User,data.user)
                 });
                 self.props.actions.changeComponentsState(self.state);
                 self.props.history.push(UserRoute.HomePage);

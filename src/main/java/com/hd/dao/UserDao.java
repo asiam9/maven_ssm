@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserDao {
 
-	public User selectUserById(String userId);
+	public User selectUserById(User user);
 
 	public User login(User user);
 

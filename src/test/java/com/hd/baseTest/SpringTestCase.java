@@ -18,7 +18,9 @@ public class SpringTestCase extends AbstractJUnit4SpringContextTests {
 
     @Test
     public void selectUserByIdTest(){
-        User user = userService.selectUserById("1");
-        System.out.println(user.getName() + ":" + user.getPassword());
+        User user = new User();
+        user.setName("侯栋");
+        User user2 = userService.selectUserById(user);
+        System.out.println(user2.getName() + ":" + user2.getPassword());
     }
 }

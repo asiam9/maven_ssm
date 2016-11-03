@@ -47,7 +47,7 @@ function _request(url, type = 'post', params = {}, onSuccess, onFailed = functio
                             if (data.result) {
                                 onSuccess(data.data);
                             } else {
-                                onFailed(data.message);
+                                onFailed(data.data.message);
                             }
                         }
                     } else {
@@ -68,7 +68,13 @@ module.exports = {
     loginAPI: function (params, onSuccess, onFailed) {
         _request('/api/user/login', 'post', params, onSuccess, onFailed);
     },
-    selectUserListAPI: function (params, onSuccess, onFailed) {
+    selectUserListByPageAPI: function (params, onSuccess, onFailed) {
         _request('/api/user/select/list/page', 'post', params, onSuccess, onFailed);
+    },
+    selectUserListAPI: function (params, onSuccess, onFailed) {
+        _request('/api/user/select/list', 'post', params, onSuccess, onFailed);
+    },
+    selectUserByIdAPI: function (params, onSuccess, onFailed) {
+        _request('/api/user/select/user', 'post', params, onSuccess, onFailed);
     },
 };

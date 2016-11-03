@@ -25,7 +25,8 @@ var HomePage = React.createClass({
             UserList: initialParams,
             pageNow:1,
             pageSize:10,
-            count:0
+            count:0,
+            pageNum:[]
         }
     },
     handleChangePageSize:function (event) {
@@ -38,18 +39,54 @@ var HomePage = React.createClass({
     },
     handleRefresh:function () {
         let self = this;
-        var param = {
+        let param = {
             pageNow: parseInt(self.state.pageNow),
             pageSize: parseInt(self.state.pageSize)
         };
-        this.selectUserListAPI(param, function (data) {
+        this.selectUserListByPageAPI(param, function (data) {
+            let pageNum = parseInt(data.count/(self.state.pageSize))+1;
+            let array = [];
+            for(let i=0;i<pageNum;i++){
+                let object = {};
+                object.pageNow = i+1;
+                object.checked = false;
+                array.push(object);
+            }
             self.setState({
                 UserList:data.list,
-                count:data.count
+                count:data.count,
+                pageNum:array
             });
         }, function (error) {
             alert(error);
         });
+    },
+    handleClickSelectPage:function (event) {
+        this.setState({
+            pageNow:event.target.value
+        },function () {
+            this.handleRefresh();
+        });
+    },
+    handleClickSelectMember:function () {
+        let self = this;
+        if(this.refs.name.value==''){
+            alert('请输入姓名进行查询!');
+        }else{
+            let param = {
+                name:this.refs.name.value
+            };
+            this.selectUserByIdAPI(param,function (data) {
+                let list = [];
+                list.push(data.user);
+                self.setState({
+                    UserList:list,
+                    count:1
+                });
+            },function (error) {
+                alert(error);
+            });
+        }
     },
     render: function () {
         let list = this.state.UserList.map((e, i) => {
@@ -62,10 +99,22 @@ var HomePage = React.createClass({
                 </tr>
             )
         });
-        let page = '';
-        for(let i=0;i<this.state.count.length;i++){
-            page = page + <li className="paginate_button active"><a href="#">{i+1}</a></li>
-        }
+        let page = this.state.pageNum.map((e, i) => {
+            if(e.checked){
+                return (
+                    <li className="paginate_button active" key={i}><span>{i+1}</span></li>
+                )
+            }else{
+                return (
+                    <li className="paginate_button" key={i}><span onClick={this.handleClickSelectPage}>{i+1}</span></li>
+                )
+            }
+        });
+        let styleObject = {
+            marginLeft: '20px',
+            border: '1px solid ##3C8DBC',
+            backgroundColor: '#3C8DBC'
+        };
         return (
             <div className="skin-blue sidebar-mini">
                 <div className="wrapper">
@@ -93,7 +142,8 @@ var HomePage = React.createClass({
                         <div className="row">
                             <div className="col-sm-6">
                                 <div className="dataTables_length" id="example1_length">
-                                    <label>每页显示:
+                                    每页显示:&nbsp;&nbsp;
+                                    <label>
                                         <select name="example1_length"  className="form-control input-sm" onChange={this.handleChangePageSize}>
                                             <option value="10">10</option>
                                             <option value="20">20</option>
@@ -104,7 +154,10 @@ var HomePage = React.createClass({
                             </div>
                             <div className="col-sm-6">
                                 <div id="example1_filter" className="dataTables_filter">
-                                    <label>查询:<input type="search" className="form-control input-sm" placeholder="请输入姓名"/></label>
+                                    <label>
+                                        <input type="search" className="form-control input-sm" placeholder="请输入姓名" ref="name"/>
+                                    </label>
+                                    <label style={styleObject} onClick={this.handleClickSelectMember}>查询</label>
                                 </div>
                             </div>
                         </div>
@@ -153,8 +206,6 @@ var HomePage = React.createClass({
                                                                 <a href="#">上一页</a>
                                                             </li>
                                                             {page}
-                                                            <li className="paginate_button active"><a href="#">1</a></li>
-                                                            <li className="paginate_button "><a href="#">2</a></li>
                                                             <li className="paginate_button next" id="example2_next">
                                                                 <a href="#">下一页</a>
                                                             </li>

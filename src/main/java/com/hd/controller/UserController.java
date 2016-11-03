@@ -1,7 +1,6 @@
 package com.hd.controller;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.hd.domain.Page;
@@ -28,24 +27,46 @@ public class UserController {
     private JsonUtil jsonUtil = new JsonUtil();
 
     /**
-     * 查询单个用户信息
-     * @param request
+     * 登录
+     * @param user
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = "/select.do")
-    public  void selectUserById(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String userId = request.getParameter("userId");
+    @RequestMapping(value = "/login.do")
+    public void login(@RequestBody User user, HttpServletResponse response)throws IOException{
+        User user2 = new User();
+        user2.setLoginName(user.getLoginName());
+        user2.setPassword(user.getPassword());
         JSONObject jsonObject = new JSONObject();
-        User user = userService.selectUserById(userId);
-        if(user!=null){
+        Result result = new Result();
+        if(userService.login(user2)!=null){
+            result.setUser(userService.login(user2));
             jsonObject.put("result", true);
-            jsonObject.put("data", user);
         }else{
             jsonObject.put("result", false);
-            jsonObject.put("message", "未查到该用户");
+            result.setMessage("用户名或密码错误");
         }
-        response.getWriter().print(jsonObject.toString());
+        jsonUtil.send(response,jsonObject,result);
+    }
+
+    /**
+     * 查询单个用户信息
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping(value = "/select/user.do")
+    public  void selectUserById(@RequestBody User user, HttpServletResponse response) throws IOException {
+        JSONObject jsonObject = new JSONObject();
+        User user2 = userService.selectUserById(user);
+        Result result = new Result();
+        if(user2!=null){
+            result.setUser(user2);
+            jsonObject.put("result", true);
+        }else{
+            jsonObject.put("result", false);
+            result.setMessage("没有该用户");
+        }
+        jsonUtil.send(response,jsonObject,result);
     }
 
     /**
@@ -61,12 +82,11 @@ public class UserController {
         if(list!=null){
             jsonObject.put("result", true);
             result.setList(list);
-            jsonObject.put("data", result);
         }else{
             jsonObject.put("result", false);
             result.setMessage("列表为空");
         }
-        jsonUtil.send(response,jsonObject);
+        jsonUtil.send(response,jsonObject,result);
     }
 
     /**
@@ -88,35 +108,11 @@ public class UserController {
             result.setCount(count);
             result.setList(list);
             jsonObject.put("result", true);
-            jsonObject.put("data", result);
         }else{
             result.setMessage("列表为空");
             jsonObject.put("result", false);
         }
-        jsonUtil.send(response,jsonObject);
+        jsonUtil.send(response,jsonObject,result);
     }
 
-    /**
-     * 登录
-     * @param user
-     * @param response
-     * @throws IOException
-     */
-    @RequestMapping(value = "/login.do")
-    public void login(@RequestBody User user, HttpServletResponse response)throws IOException{
-        User user2 = new User();
-        user2.setLoginName(user.getLoginName());
-        user2.setPassword(user.getPassword());
-        JSONObject jsonObject = new JSONObject();
-        Result result = new Result();
-        if(userService.login(user2)!=null){
-            result.setUser(userService.login(user2));
-            jsonObject.put("result", true);
-            jsonObject.put("data", result);
-        }else{
-            jsonObject.put("result", false);
-            jsonObject.put("message", "用户名或密码错误");
-        }
-        jsonUtil.send(response,jsonObject);
-    }
 }

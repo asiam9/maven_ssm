@@ -11,7 +11,8 @@ import java.io.IOException;
  */
 public class JsonUtil {
 
-    public void send(HttpServletResponse response, JSONObject jsonObject) throws IOException {
+    public void send(HttpServletResponse response, JSONObject jsonObject,Result result) throws IOException {
+        jsonObject.put("data", result);
         response.setContentType("text/html;charset=UTF-8");
         response.getWriter().print(jsonObject.toString());
     }
