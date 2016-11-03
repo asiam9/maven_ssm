@@ -38175,6 +38175,8 @@ webpackJsonp([0,1],[
 
 	var _Api2 = _interopRequireDefault(_Api);
 
+	var _reduxRouter = __webpack_require__(346);
+
 	function _interopRequireDefault(obj) {
 	    return obj && obj.__esModule ? obj : { default: obj };
 	}
@@ -38197,48 +38199,48 @@ webpackJsonp([0,1],[
 
 	var React = __webpack_require__(156);
 
-	var initialParams = __webpack_require__(380).Login;
+	var initialParams = __webpack_require__(380).User;
+
+	var objectAssign = __webpack_require__(100);
 
 	var Login = React.createClass({
 	    displayName: "Login",
 
 	    mixins: [_Api2.default],
 
+	    /******************************************************************************
+	     * life cycle functions
+	     ******************************************************************************/
 	    getDefaultProps: function getDefaultProps() {
 	        return {
-	            Login: initialParams
+	            User: initialParams
 	        };
 	    },
 	    getInitialState: function getInitialState() {
 	        return {
-	            loginName: '',
-	            userPassword: ''
+	            User: initialParams
 	        };
 	    },
+
+	    /******************************************************************************
+	     * event handlers
+	     ******************************************************************************/
 	    handleClickLogin: function handleClickLogin() {
-	        var loginName = this.state.loginName;
-	        var userPassword = this.state.userPassword;
+	        var loginName = this.state.User.loginName;
+	        var password = this.state.User.password;
 	        var self = this;
 	        if (loginName == '') {
 	            alert("请填写登录名");
 	            return false;
-	        } else if (userPassword == '') {
+	        } else if (password == '') {
 	            alert("请填写密码");
 	            return false;
 	        } else {
-	            var params = {
-	                loginName: loginName,
-	                userPassword: userPassword
-	            };
-	            self.loginAPI(params, function (data) {
-	                self.props.Login.loginName = data.loginName;
-	                self.props.Login.userPassword = data.userPassword;
-	                self.props.Login.userId = data.userId;
-	                self.props.Login.userName = data.userName;
-	                var param = {
-	                    Login: self.props.Login
-	                };
-	                self.props.actions.changeComponentsState(param);
+	            self.loginAPI(this.state.User, function (data) {
+	                self.setState({
+	                    User: objectAssign(self.state.User, data.user)
+	                });
+	                self.props.actions.changeComponentsState(self.state);
 	                self.props.history.push(_UserRoute.UserRoute.HomePage);
 	            }, function (error) {
 	                alert(error);
@@ -38251,15 +38253,25 @@ webpackJsonp([0,1],[
 	        }
 	    },
 	    handleChangeName: function handleChangeName(event) {
-	        this.setState({
+	        var param = {
 	            loginName: event.target.value
+	        };
+	        this.setState({
+	            User: objectAssign(this.state.User, param)
 	        });
 	    },
 	    handleChangePassword: function handleChangePassword(event) {
+	        var param = {
+	            password: event.target.value
+	        };
 	        this.setState({
-	            userPassword: event.target.value
+	            User: objectAssign(this.state.User, param)
 	        });
 	    },
+
+	    /******************************************************************************
+	     * render functions
+	     ******************************************************************************/
 	    render: function render() {
 	        return React.createElement("div", { className: "login-box", onKeyUp: this.handleKeyLogin }, React.createElement("div", { className: "login-logo" }, React.createElement("b", null, "H5"), "\u7BA1\u7406\u540E\u53F0"), React.createElement("div", { className: "login-box-body" }, React.createElement("div", null, React.createElement("div", { className: "form-group has-feedback" }, React.createElement("input", { type: "text",
 	            className: "form-control",
@@ -38275,11 +38287,12 @@ webpackJsonp([0,1],[
 
 	module.exports = (0, _reactRedux.connect)(function (state) {
 	    return {
-	        Login: state.componentsReducer.Login
+	        User: state.componentsReducer.User
 	    };
 	}, function (dispatch) {
 	    return {
-	        actions: (0, _redux.bindActionCreators)(ItemsActions, dispatch)
+	        actions: (0, _redux.bindActionCreators)(ItemsActions, dispatch),
+	        history: (0, _redux.bindActionCreators)({ replace: _reduxRouter.replace, goBack: _reduxRouter.goBack, push: _reduxRouter.push }, dispatch)
 	    };
 	})(Login);
 
@@ -38338,7 +38351,7 @@ webpackJsonp([0,1],[
 
 	    switch (type) {
 	        case 'get':
-	            _superagent2.default.get(url).query(params).end(function (err, res) {
+	            _superagent2.default.get(url + '.do').query(params).end(function (err, res) {
 	                if (!res) {
 	                    alert(err);
 	                    return;
@@ -38373,7 +38386,7 @@ webpackJsonp([0,1],[
 	                        if (data.result) {
 	                            onSuccess(data.data);
 	                        } else {
-	                            onFailed(data.message);
+	                            onFailed(data.data.message);
 	                        }
 	                    }
 	                } else {
@@ -38392,6 +38405,15 @@ webpackJsonp([0,1],[
 	     ******************************************************************************/
 	    loginAPI: function loginAPI(params, onSuccess, onFailed) {
 	        _request('/api/user/login', 'post', params, onSuccess, onFailed);
+	    },
+	    selectUserListByPageAPI: function selectUserListByPageAPI(params, onSuccess, onFailed) {
+	        _request('/api/user/select/list/page', 'post', params, onSuccess, onFailed);
+	    },
+	    selectUserListAPI: function selectUserListAPI(params, onSuccess, onFailed) {
+	        _request('/api/user/select/list', 'post', params, onSuccess, onFailed);
+	    },
+	    selectUserByIdAPI: function selectUserByIdAPI(params, onSuccess, onFailed) {
+	        _request('/api/user/select/user', 'post', params, onSuccess, onFailed);
 	    }
 	};
 
@@ -40001,12 +40023,15 @@ webpackJsonp([0,1],[
 	    /******************************************************************************
 	     * 用户相关
 	     ******************************************************************************/
-	    Login: {
+	    User: {
 	        loginName: '',
-	        userPassword: '',
-	        userId: '',
-	        userName: ''
-	    }
+	        password: '',
+	        name: '',
+	        age: '',
+	        gender: '',
+	        position: ''
+	    },
+	    UserList: []
 
 	};
 	module.exports = initialProps;
@@ -40032,7 +40057,15 @@ webpackJsonp([0,1],[
 
 	var _UserRoute = __webpack_require__(321);
 
+	var _Api = __webpack_require__(374);
+
+	var _Api2 = _interopRequireDefault(_Api);
+
 	var _reduxRouter = __webpack_require__(346);
+
+	function _interopRequireDefault(obj) {
+	    return obj && obj.__esModule ? obj : { default: obj };
+	}
 
 	function _interopRequireWildcard(obj) {
 	    if (obj && obj.__esModule) {
@@ -40052,17 +40085,183 @@ webpackJsonp([0,1],[
 
 	var React = __webpack_require__(156);
 
+	var initialParams = __webpack_require__(380).UserList;
+	var classNames = __webpack_require__(382);
+	var HeaderLayout = __webpack_require__(383);
+
 	var HomePage = React.createClass({
 	    displayName: 'HomePage',
 
+	    mixins: [_Api2.default],
+
+	    /******************************************************************************
+	     * life cycle functions
+	     ******************************************************************************/
+	    getDefaultProps: function getDefaultProps() {
+	        return {
+	            UserList: initialParams
+	        };
+	    },
+	    getInitialState: function getInitialState() {
+	        return {
+	            UserList: initialParams,
+	            pageNow: 1,
+	            pageSize: 10,
+	            count: 0,
+	            pageList: [],
+	            index: 1,
+	            disabled_p: true,
+	            disabled_n: false
+	        };
+	    },
+	    componentWillMount: function componentWillMount() {
+	        this.handleRefresh();
+	    },
+
+	    /******************************************************************************
+	     * event handlers
+	     ******************************************************************************/
+	    handleChangePageSize: function handleChangePageSize(event) {
+	        var _this = this;
+
+	        this.setState({
+	            pageSize: event.target.value,
+	            pageNow: 1,
+	            index: 1
+	        }, function () {
+	            return _this.handleRefresh();
+	        });
+	    },
+	    handleRefresh: function handleRefresh() {
+	        var self = this;
+	        var param = {
+	            pageNow: parseInt(self.state.pageNow),
+	            pageSize: parseInt(self.state.pageSize)
+	        };
+	        this.selectUserListByPageAPI(param, function (data) {
+	            var pageNum = parseInt(data.count / self.state.pageSize) + 1;
+	            var array = [];
+	            for (var i = 0; i < pageNum; i++) {
+	                var object = {};
+	                object.pageNow = i + 1;
+	                array.push(object);
+	            }
+	            self.setState({
+	                UserList: data.list,
+	                count: data.count,
+	                pageList: array
+	            });
+	        }, function (error) {
+	            alert(error);
+	        });
+	    },
+	    handleClickSelectPage: function handleClickSelectPage(event) {
+	        this.setState({
+	            pageNow: event.target.dataset.id,
+	            index: event.target.dataset.id
+	        }, function () {
+	            this.handleRefresh();
+	        });
+	    },
+	    handleClickSelectMember: function handleClickSelectMember() {
+	        var self = this;
+	        if (this.refs.name.value == '') {
+	            alert('请输入姓名进行查询!');
+	        } else {
+	            var param = {
+	                name: this.refs.name.value
+	            };
+	            this.selectUserByIdAPI(param, function (data) {
+	                var pageNum = parseInt(data.count / self.state.pageSize) + 1;
+	                var array = [];
+	                for (var i = 0; i < pageNum; i++) {
+	                    var object = {};
+	                    object.pageNow = i + 1;
+	                    array.push(object);
+	                }
+	                self.setState({
+	                    UserList: data.list,
+	                    count: data.count,
+	                    index: 1,
+	                    pageNow: 1,
+	                    pageList: array
+	                });
+	            }, function (error) {
+	                alert(error);
+	            });
+	        }
+	    },
+	    handleClickPreviousPage: function handleClickPreviousPage() {
+	        if (1 != this.state.pageNow) {
+	            this.setState({
+	                pageNow: this.state.pageNow - 1,
+	                index: this.state.index - 1,
+	                disabled_p: false
+	            }, function () {
+	                this.handleRefresh();
+	            });
+	        } else {
+	            this.setState({
+	                disabled_p: true,
+	                disabled_n: false
+	            });
+	        }
+	    },
+	    handleClickNextPage: function handleClickNextPage() {
+	        var pageNum = parseInt(this.state.count / this.state.pageSize) + 1;
+	        if (pageNum != this.state.pageNow) {
+	            this.setState({
+	                pageNow: this.state.pageNow + 1,
+	                index: this.state.index + 1,
+	                disabled_n: false
+	            }, function () {
+	                this.handleRefresh();
+	            });
+	        } else {
+	            this.setState({
+	                disabled_n: true,
+	                disabled_p: false
+	            });
+	        }
+	    },
+
+	    /******************************************************************************
+	     * render functions
+	     ******************************************************************************/
 	    render: function render() {
-	        return React.createElement('div', { className: 'skin-blue sidebar-mini' }, React.createElement('div', { className: 'wrapper' }, React.createElement('header', { className: 'main-header' }, React.createElement('a', { href: 'javascript:void(0);', className: 'logo' }, React.createElement('span', { className: 'logo-lg' }, React.createElement('b', null, 'H5'), '\u7BA1\u7406\u540E\u53F0')), React.createElement('nav', { className: 'navbar navbar-static-top', role: 'navigation' }, React.createElement('div', { className: 'navbar-custom-menu' }, React.createElement('ul', { className: 'nav navbar-nav' }, React.createElement('li', { className: 'dropdown user user-menu' }, React.createElement('a', { href: '#', className: 'dropdown-toggle' }, React.createElement('div', { className: 'hd-user-image' }, this.props.Login.userName.substring(0, 1)), React.createElement('span', { className: 'hidden-xs' }, this.props.Login.userName)))))))));
+	        var _this2 = this;
+
+	        var list = this.state.UserList.map(function (e, i) {
+	            return React.createElement('tr', { role: 'row', className: 'odd', key: i }, React.createElement('td', { className: 'sorting_1' }, e.name), React.createElement('td', null, e.gender), React.createElement('td', null, e.age), React.createElement('td', null, e.position));
+	        });
+	        var className_p = classNames('paginate_button previous', { 'disabled': this.state.disabled_p });
+	        var previousPage = React.createElement('li', { className: className_p, id: 'example2_previous' }, React.createElement('span', { onClick: this.handleClickPreviousPage }, '\u4E0A\u4E00\u9875'));
+	        var page = this.state.pageList.map(function (e, i) {
+	            var className = classNames('paginate_button', { 'active': _this2.state.index == i + 1 });
+	            return React.createElement('li', { className: className, key: i }, React.createElement('span', { 'data-id': e.pageNow, onClick: _this2.handleClickSelectPage }, e.pageNow));
+	        });
+	        var className_n = classNames('paginate_button next', { 'disabled': this.state.disabled_n });
+	        var nextPage = React.createElement('li', { className: className_n, id: 'example2_next' }, React.createElement('span', { onClick: this.handleClickNextPage }, '\u4E0B\u4E00\u9875'));
+	        var styleObject = {
+	            marginLeft: '20px',
+	            border: '1px solid ##3C8DBC',
+	            backgroundColor: '#3C8DBC'
+	        };
+	        return React.createElement('div', null, React.createElement(HeaderLayout, null), React.createElement('div', { className: 'content-wrapper' }, React.createElement('section', { className: 'content' }, React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-sm-6' }, React.createElement('div', { className: 'dataTables_length', id: 'example1_length' }, '\u6BCF\u9875\u663E\u793A:\xA0\xA0', React.createElement('label', null, React.createElement('select', { name: 'example1_length', className: 'form-control input-sm',
+	            onChange: this.handleChangePageSize }, React.createElement('option', { value: '10' }, '10'), React.createElement('option', { value: '20' }, '20'), React.createElement('option', { value: '30' }, '30'))))), React.createElement('div', { className: 'col-sm-6' }, React.createElement('div', { id: 'example1_filter', className: 'dataTables_filter' }, React.createElement('label', null, React.createElement('input', { type: 'search', className: 'form-control input-sm', placeholder: '\u8BF7\u8F93\u5165\u59D3\u540D',
+	            ref: 'name' })), React.createElement('label', { style: styleObject, onClick: this.handleClickSelectMember }, '\u67E5\u8BE2')))), React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-xs-12' }, React.createElement('div', { className: 'box' }, React.createElement('div', { className: 'box-header' }, React.createElement('h3', { className: 'box-title' }, '\u6210\u5458\u7BA1\u7406')), React.createElement('div', { className: 'box-body' }, React.createElement('div', { id: 'example2_wrapper',
+	            className: 'dataTables_wrapper form-inline dt-bootstrap' }, React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-sm-6' }), React.createElement('div', { className: 'col-sm-6' })), React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-sm-12' }, React.createElement('table', { id: 'example2',
+	            className: 'table table-bordered table-hover dataTable',
+	            role: 'grid' }, React.createElement('thead', null, React.createElement('tr', { role: 'row' }, React.createElement('th', { className: 'sorting_asc' }, '\u59D3\u540D'), React.createElement('th', { className: 'sorting' }, '\u6027\u522B'), React.createElement('th', { className: 'sorting' }, '\u5E74\u9F84'), React.createElement('th', { className: 'sorting' }, '\u804C\u4F4D'))), React.createElement('tbody', null, list)))), React.createElement('div', { className: 'row' }, React.createElement('div', { className: 'col-sm-5' }, React.createElement('div', { className: 'dataTables_info', id: 'example2_info', role: 'status' }, '\u7B2C', React.createElement('span', {
+	            style: { color: 'red' } }, this.state.pageNow), '\u9875,\u5171', React.createElement('span', {
+	            style: { color: 'red' } }, this.state.count), '\u6761\u6570\u636E')), React.createElement('div', { className: 'col-sm-7' }, React.createElement('div', { className: 'dataTables_paginate paging_simple_numbers',
+	            id: 'example2_paginate' }, React.createElement('ul', { className: 'pagination' }, previousPage, page, nextPage))))))))))));
 	    }
 	});
 
 	module.exports = (0, _reactRedux.connect)(function (state) {
 	    return {
-	        Login: state.componentsReducer.Login
+	        User: state.componentsReducer.User
 	    };
 	}, function (dispatch) {
 	    return {
@@ -40072,6 +40271,111 @@ webpackJsonp([0,1],[
 	})(HomePage);
 
 	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(322); if (makeExportsHot(module, __webpack_require__(156))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HomePage.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
+
+/***/ },
+/* 382 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+
+
+/***/ },
+/* 383 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(module) {/* REACT HOT LOADER */ if (true) { (function () { var ReactHotAPI = __webpack_require__(78), RootInstanceProvider = __webpack_require__(86), ReactMount = __webpack_require__(88), React = __webpack_require__(156); module.makeHot = module.hot.data ? module.hot.data.makeHot : ReactHotAPI(function () { return RootInstanceProvider.getRootInstances(ReactMount); }, React); })(); } try { (function () {
+
+	"use strict";
+
+	var _redux = __webpack_require__(325);
+
+	var _reactRedux = __webpack_require__(339);
+
+	/**
+	 * Created by houdong on 16/11/3.
+	 */
+
+	var React = __webpack_require__(156);
+
+	var initialParams = __webpack_require__(380).User;
+	var HeaderLayout = React.createClass({
+	    displayName: "HeaderLayout",
+
+	    /******************************************************************************
+	     * life cycle functions
+	     ******************************************************************************/
+	    getDefaultProps: function getDefaultProps() {
+	        return {
+	            User: initialParams
+	        };
+	    },
+
+	    /******************************************************************************
+	     * render functions
+	     ******************************************************************************/
+	    render: function render() {
+	        return React.createElement("header", { className: "main-header" }, React.createElement("a", { href: "javascript:void(0);", className: "logo" }, React.createElement("span", { className: "logo-lg" }, React.createElement("b", null, "H5"), "\u7BA1\u7406\u540E\u53F0")), React.createElement("nav", { className: "navbar navbar-static-top", role: "navigation" }, React.createElement("div", { className: "navbar-custom-menu" }, React.createElement("ul", { className: "nav navbar-nav" }, React.createElement("li", { className: "dropdown user user-menu" }, React.createElement("a", { href: "#", className: "dropdown-toggle" }, React.createElement("div", {
+	            className: "hd-user-image" }, this.props.User.name.substring(0, 1)), React.createElement("span", { className: "hidden-xs" }, this.props.User.name)))))));
+	    }
+	});
+
+	module.exports = (0, _reactRedux.connect)(function (state) {
+	    return {
+	        User: state.componentsReducer.User
+	    };
+	}, function (dispatch) {
+	    return {};
+	})(HeaderLayout);
+
+	/* REACT HOT LOADER */ }).call(this); } finally { if (true) { (function () { var foundReactClasses = module.hot.data && module.hot.data.foundReactClasses || false; if (module.exports && module.makeHot) { var makeExportsHot = __webpack_require__(322); if (makeExportsHot(module, __webpack_require__(156))) { foundReactClasses = true; } var shouldAcceptModule = true && foundReactClasses; if (shouldAcceptModule) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HeaderLayout.js" + ": " + err.message); } }); } } module.hot.dispose(function (data) { data.makeHot = module.makeHot; data.foundReactClasses = foundReactClasses; }); })(); } }
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ }

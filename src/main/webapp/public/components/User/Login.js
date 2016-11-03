@@ -16,6 +16,9 @@ var Login = React.createClass({
 
     mixins: [Api],
 
+    /******************************************************************************
+     * life cycle functions
+     ******************************************************************************/
     getDefaultProps: function () {
         return {
             User: initialParams
@@ -26,6 +29,10 @@ var Login = React.createClass({
             User:initialParams
         }
     },
+
+    /******************************************************************************
+     * event handlers
+     ******************************************************************************/
     handleClickLogin: function () {
         let loginName = this.state.User.loginName;
         let password = this.state.User.password;
@@ -69,6 +76,10 @@ var Login = React.createClass({
             User:objectAssign(this.state.User,param)
         });
     },
+
+    /******************************************************************************
+     * render functions
+     ******************************************************************************/
     render: function () {
         return (
             <div className="login-box" onKeyUp={this.handleKeyLogin}>

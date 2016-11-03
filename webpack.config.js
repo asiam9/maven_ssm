@@ -101,6 +101,7 @@ var config = {
             UserRoute: 'configs/Route',//user路由配置
             CommonFun: 'configs/CommonFun',//公用方法
             Api: 'configs/Api',//请求方法
+            HeaderLayout:'layouts/HeaderLayout'//Header布局
         }
     },
     module: {

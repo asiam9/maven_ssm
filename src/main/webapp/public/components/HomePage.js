@@ -11,11 +11,15 @@ import Api from "Api";
 import {replace, goBack, push} from 'redux-router';
 var initialParams = require('InitialProps').UserList;
 var classNames = require('classnames');
+var HeaderLayout = require('HeaderLayout');
 
 var HomePage = React.createClass({
 
     mixins: [Api],
 
+    /******************************************************************************
+     * life cycle functions
+     ******************************************************************************/
     getDefaultProps: function () {
         return {
             UserList: initialParams
@@ -33,15 +37,19 @@ var HomePage = React.createClass({
             disabled_n:false
         }
     },
+    componentWillMount: function () {
+        this.handleRefresh();
+    },
+
+    /******************************************************************************
+     * event handlers
+     ******************************************************************************/
     handleChangePageSize: function (event) {
         this.setState({
             pageSize: event.target.value,
             pageNow:1,
             index:1
         }, () => this.handleRefresh());
-    },
-    componentWillMount: function () {
-        this.handleRefresh();
     },
     handleRefresh: function () {
         let self = this;
@@ -135,6 +143,10 @@ var HomePage = React.createClass({
             });
         }
     },
+
+    /******************************************************************************
+     * render functions
+     ******************************************************************************/
     render: function () {
         let list = this.state.UserList.map((e, i) => {
             return (
@@ -173,27 +185,8 @@ var HomePage = React.createClass({
             backgroundColor: '#3C8DBC'
         };
         return (
-            <div className="skin-blue sidebar-mini">
-                <div className="wrapper">
-                    <header className="main-header">
-                        <a href="javascript:void(0);" className="logo">
-                            <span className="logo-lg"><b>H5</b>管理后台</span>
-                        </a>
-                        <nav className="navbar navbar-static-top" role="navigation">
-                            <div className="navbar-custom-menu">
-                                <ul className="nav navbar-nav">
-                                    <li className="dropdown user user-menu">
-                                        <a href="#" className="dropdown-toggle">
-                                            <div
-                                                className="hd-user-image">{this.props.User.name.substring(0, 1)}</div>
-                                            <span className="hidden-xs">{this.props.User.name}</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </nav>
-                    </header>
-                </div>
+            <div>
+                <HeaderLayout></HeaderLayout>
                 <div className="content-wrapper">
                     <section className="content">
                         <div className="row">
